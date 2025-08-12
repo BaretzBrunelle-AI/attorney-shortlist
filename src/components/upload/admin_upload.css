@@ -1,0 +1,188 @@
+:root {
+    --form-field-bg-color: rgb(77, 77, 77);
+    --upload-form-button-bg-color:rgb(227, 227, 227);
+    --bw-text-color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --form-field-bg-color: rgb(77, 77, 77);
+        --upload-form-button-bg-color: rgb(227, 227, 227);
+        --bw-text-color: black;
+    }
+}
+
+.admin-nav-sub-container {
+    padding-top: 8px;
+}
+
+.admin-upload-main-container {
+    max-height: 80vh;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.admin-upload-section-one {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.upload-new-shortlist-container {
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    max-width: 20vw;
+    background-color: grey;
+    box-shadow: 10px 10px rgb(57, 143, 255);
+    padding: 10px;
+}
+
+.upload-attorney-images-container {
+    width: 20vw;
+    max-width: 20vw;
+    display: flex;
+    flex-direction: column;
+    max-width: 20vw;
+    background-color: grey;
+    box-shadow: 10px 10px rgb(57, 143, 255);
+    height: 100%;
+    overflow-y: scroll;
+    min-height: 200px;
+    padding: 10px;
+}
+
+.attorney-image-upload-list {
+    max-width: 100%;
+}
+
+.attorney-image-upload-form {
+    width: 100%;
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+    display: flex;
+}
+
+.attorney-image-upload-form button,
+.attorney-image-upload-form label input::file-selector-button{
+    background-color: var(--upload-form-button-bg-color);
+    border-radius: 5px;
+    color: var(--bw-text-color);
+}
+
+.admin-upload-attorney-forms {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-upload-attorney-forms input {
+    display: flex;
+}
+
+.section-title {
+    font-size: larger;
+    font-weight: bold;
+    border-bottom: 1px solid rgb(38, 37, 37)
+}
+
+#project-name-input-field,
+#attorney-file-input-field,
+#project-header-title-input-field,
+#project-header-subtitle-input-field {
+    background-color: var(--form-field-bg-color);
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+#attorney-file-input-field::file-selector-button {
+    background-color: var(--upload-form-button-bg-color);
+    border-radius: 5px;
+    color: var(--bw-text-color);
+}
+
+#upload-submit-button {
+    background-color: var(--upload-form-button-bg-color);
+    border-radius: 5px;
+    color: var(--bw-text-color);
+}
+
+.project-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.clear-list {
+    background-color: whitesmoke;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.clear-list:hover {
+    background-color: rgb(149, 48, 167);
+    color: white;
+}
+
+.clear-list:disabled {
+    background-color: rgb(179, 179, 179);
+    color: white;
+}
+
+.select-project {
+    background-color: whitesmoke;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 140px;
+    font-weight: 500;
+    color: #222;
+}
+
+.select-project:hover {
+    background-color: rgb(149, 48, 167);
+    color: white;
+}
+
+.project-dropdown-wrapper:hover .upload-find-projects-dropdown {
+    display: flex;
+}
+
+.upload-find-projects-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;                       
+    transform: translateX(-50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 2;
+    flex-direction: column;
+    width: 90%;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: 100px;
+    overflow-y: scroll;
+}
+
+.upload-find-projects-item {
+    padding: 2px 0;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.upload-find-projects-item:hover {
+    background-color: rgb(149, 48, 167);
+    color: white;
+}

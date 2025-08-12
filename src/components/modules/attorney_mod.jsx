@@ -59,42 +59,45 @@ const AttorneyModule = ({
                 </div>
                 <div className="basics-hemisphere-two">
                     <div className="attorney-location">
-                        <img className="attorney-location-icon" alt="attorney-location-icon" src={pin} />
                         {location}
+                        <img className="attorney-location-icon" alt="attorney-location-icon" src={pin} />
                     </div>
                     <div className="attorney-current-workplace">
-                        <img className="attorney-work-icon" alt="attorney-work-icon" src={briefcase} />
                         {currentWorkplace}
+                        <img className="attorney-work-icon" alt="attorney-work-icon" src={briefcase} />
                     </div>
                     <div className="attorney-phone-number">
-                        <img className="attorney-phone-icon" alt="attorney-phone-icon" src={phone} />
                         {phoneNumber}
+                        <img className="attorney-phone-icon" alt="attorney-phone-icon" src={phone} />
                     </div>
                     <div className="attorney-email">
-                        <img className="attorney-email-icon" alt="attorney-email-icon" src={mail} />
                         {email}
+                        <img className="attorney-email-icon" alt="attorney-email-icon" src={mail} />
                     </div>
                 </div>
             </div>
             <div className="summary-main-container">{summary}</div>
-            <div className={showAllTags ? "tags-main-container-reveal" : "tags-main-container"}>
-                {tags && displayedTags.map((tag, index) => (
-                    <div key={index} className="attorney-tag">
-                        {tag.value}
-                    </div>
-                ))}
+            <div className="attorney-mod-bottom-container">
+                <div className={showAllTags ? "tags-main-container-reveal" : "tags-main-container"}>
+                    {tags &&
+                    [...new Set(displayedTags.map(tag => tag.value))].map((uniqueValue, index) => (
+                        <div key={index} className="attorney-tag">
+                        {uniqueValue}
+                        </div>
+                    ))}
 
-                {remainingCount > 0 && !showAllTags && (
-                    <div className="attorney-tag-toggle" onClick={toggleTags}>
-                        +{remainingCount} More
-                    </div>
-                )}
+                    {remainingCount > 0 && !showAllTags && (
+                        <div className="attorney-tag-toggle" onClick={toggleTags}>
+                            +{remainingCount} More
+                        </div>
+                    )}
 
-                {showAllTags && (
-                    <div className="attorney-tag-toggle" onClick={toggleTags}>
-                        Hide
-                    </div>
-                )}
+                    {showAllTags && (
+                        <div className="attorney-tag-toggle" onClick={toggleTags}>
+                            Hide
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )

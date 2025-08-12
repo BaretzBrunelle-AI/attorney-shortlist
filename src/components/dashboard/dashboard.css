@@ -1,0 +1,5 @@
+.shortlist-dashboard-main-container {
+    height: 98%;
+    overflow-y: scroll;
+    padding: .5em 0;
+}

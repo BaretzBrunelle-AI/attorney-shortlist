@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // modules
 import AttorneyModule from "../modules/attorney_mod.jsx";
+import api from "../../config/axios_config.jsx";
 
 // css
 import "./attorney_widget.css";
@@ -10,31 +11,27 @@ const AttorneyWidget = () => {
     const [attorneys, setAttorneys] = useState([]);
 
     useEffect(() => {
-        const fetchAttorneys = async () => {
+       const fetchAttorneys = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/dashboard/get-attorneys`);
-                const data = await response.json();
+                const response = await api.get("/dashboard/get-attorneys");
+                const data = response.data;
 
-                // Process images
                 const processedData = data.map(attorney => {
                     const nameKey = attorney.name.replace(/\s+/g, "_") + "_headshot";
                     
                     let imageURL;
-
-                    // Check localStorage for existing image
+                    // Check localStorage for existing image URL
                     const cachedImage = localStorage.getItem(nameKey);
-                    if (cachedImage) {
+                    if (cachedImage && cachedImage === attorney.image) {
                         imageURL = cachedImage;
                     } else {
                         if (attorney.image) {
-                            imageURL = `data:image/jpeg;base64,${attorney.image}`;
+                            imageURL = attorney.image;
                             localStorage.setItem(nameKey, imageURL);
                         } else {
-                            imageURL = ""; // fallback if no image
+                            imageURL = ""; // Fallback if no image
                         }
                     }
-
-                    // console.log(attorney.tags);
 
                     return {
                         ...attorney,

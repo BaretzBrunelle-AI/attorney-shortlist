@@ -5,15 +5,27 @@ import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 
 // Widgets
-import AttorneyModule from "../modules/attorney_mod";
-import NavBar from "../navbar/navbar";
 import AttorneyWidget from "../widgets/attorney_widget";
+import AdminNav from "../admin/admin_nav";
+
+// modules
+import { verifyToken } from "../../config/reusable_config";
 
 const Dashboard = () => {
+    const [isAdmin, setIsAdmin] = useState(false);
+
+        const verify = async () => {
+            const verified = await verifyToken();
+            if (verified) setIsAdmin(true);
+        };
+
+    useEffect(() => {
+        verify();
+    },[]);
 
     return (
         <div className="shortlist-dashboard-main-container">
-            <NavBar />
+            {isAdmin && <AdminNav />}
             <AttorneyWidget />
         </div>
     )

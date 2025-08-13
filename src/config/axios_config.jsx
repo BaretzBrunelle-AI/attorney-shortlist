@@ -1,8 +1,10 @@
 import axios from "axios";
 import { getToken } from "./reusable_config.jsx"
 
+const baseURL = import.meta.env.DEV ? "" : import.meta.env.VITE_API_BASE || "";
+
 const api = axios.create({
-	baseURL: import.meta.env.VITE_API_BASE
+	baseURL: baseURL,
 });
 
 api.interceptors.request.use(async (config) => {

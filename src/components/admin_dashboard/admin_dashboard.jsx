@@ -19,7 +19,7 @@ const AdminDashboard = () => {
 				const ok = await verifyToken(true);
 				if (!ok) {
 					console.log("Token could not be verified");
-					navigate("/dashboard");
+					navigate("/landing");
 				}
 			}
 		};

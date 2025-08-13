@@ -20,7 +20,7 @@ function App() {
 
 					{/* Default route fallback */}
 					<Route path="*" element={<Landing />} />
-				</Routes>
+\				</Routes>
 			</div>
 		</Router>
 	);

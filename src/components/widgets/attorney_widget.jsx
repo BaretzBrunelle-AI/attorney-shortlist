@@ -40,8 +40,10 @@ const AttorneyWidget = ({ attorneys: attorneysProp }) => {
         // Otherwise fetch from backend
         const fetchAttorneys = async () => {
             try {
-                const response = await api.get("/dashboard/get-attorneys");
+                const response = await api.get("/dashboard/get-attorneys-user");
                 const data = response.data || [];
+                setAttorneys([]);   // TODO: remove after testing
+                return;
                 setAttorneys(processList(data));
             } catch (err) {
                 console.error("Error fetching attorneys:", err);

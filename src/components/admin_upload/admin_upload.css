@@ -139,6 +139,9 @@
     border-radius: 5px;
     color: white;
     font-weight: bold;
+    border: 1px solid var(--onyx);
+    width: 100%;
+    padding: 2px 2px;
 }
 
 #attorney-file-input-field::file-selector-button {

@@ -18,15 +18,15 @@
 
 .admin-upload-main-container {
     display: grid;
-    gap: 30px;
+    height: 100%;
+    gap: 30px 10px;
     padding: 10px 20px;
-    max-height: 80vh;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
     align-items: start;
 
     grid-template-columns: repeat(2, minmax(280px, 1fr));
-    grid-template-rows: auto auto;
+    grid-template-rows: 60% 31%;
 }
 
 @media (min-width: 1100px) {
@@ -42,20 +42,9 @@
 }
 
 /* panels */
-.admin-upload-section-one,
-.admin-upload-section-two,
-.admin-upload-section-three {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    min-width: 0;
-    height: 100%;
-}
-
 .upload-new-shortlist-container,
 .upload-attorney-images-container,
 .attorney-shortlist-download-container {
-    width: 100%;
     max-width: none;
     background-color: var(--davys-gray);
     padding: 10px;
@@ -72,7 +61,6 @@
 }
 
 .upload-attorney-images-container {
-    overflow-y: auto;
     max-height: 70vh;
 }
 
@@ -83,6 +71,7 @@
     border: 1px solid var(--timberwolf);
     background: var(--white-smoke);
     color: var(--onyx);
+    margin-bottom: 5px;
 }
 
 .clear-list,
@@ -99,6 +88,11 @@
 
 .attorney-image-upload-list {
     max-width: 100%;
+    max-height: 65%;
+    overflow-y: scroll;
+    border: 1px solid var(--onyx);
+    border-radius: 5px;
+    padding: 2px 2px;
 }
 
 .attorney-image-upload-form {

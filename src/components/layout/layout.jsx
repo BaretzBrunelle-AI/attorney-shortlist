@@ -37,9 +37,9 @@ const Layout = () => {
 			<NavBar />
 
 			<div className="layout-body">
-				<main className="layout-content">
+				<div className="layout-content">
           			<Outlet context={{ selectedProject, setSelectedProject, attorneys }} />
-				</main>
+				</div>
 
 				{checkedAdmin && isAdminVerified && (
 					<AdminNav

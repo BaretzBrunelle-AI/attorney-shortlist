@@ -10,45 +10,71 @@ import "./attorney_widget.css";
 const AttorneyWidget = ({ attorneys: attorneysProp }) => {
     const [attorneys, setAttorneys] = useState([]);
 
-    const processList = (data) =>
-        data.map((attorney) => {
-            const safeName = (attorney?.name || "").trim();
-            const nameKey = safeName.replace(/\s+/g, "_") + "_headshot";
+    const tierOrder = new Map([
+        ["marquee", 0],
+        ["first class", 1],
+        ["wild card", 2],
+    ]);
+    const rankTier = (tier) => tierOrder.get((tier || "").toLowerCase().trim()) ?? 999;
 
-            let imageURL;
-            const cachedImage = localStorage.getItem(nameKey);
+    const compareCI = (a, b) =>
+        (a || "").localeCompare(b || "", undefined, { sensitivity: "base" });
 
-            if (cachedImage && cachedImage === attorney.image) {
-                imageURL = cachedImage;
-            } else if (attorney.image) {
-                imageURL = attorney.image;
-                localStorage.setItem(nameKey, imageURL);
-            } else {
-                imageURL = undefined;
-            }
+    const processList = (data) => {
+        const sorted = data
+            .map((attorney) => {
+                const safeName = (attorney?.name || "").trim();
+                const nameKey = safeName.replace(/\s+/g, "_") + "_headshot";
 
-            return { ...attorney, image: imageURL };
-        });
+                let imageURL;
+                const cached = localStorage.getItem(nameKey);
+                if (cached && cached === attorney.image) imageURL = cached;
+                else if (attorney.image) {
+                    imageURL = attorney.image;
+                    localStorage.setItem(nameKey, imageURL);
+                }
+
+                const filteredTags = Array.isArray(attorney.tags)
+                    ? attorney.tags.filter((t) => t.key !== "Status")
+                    : [];
+
+                return { ...attorney, image: imageURL, tags: filteredTags };
+            })
+            .sort((a, b) => {
+                const ta = rankTier(a.tier);
+                const tb = rankTier(b.tier);
+                if (ta !== tb) return ta - tb;
+
+                const fa = (a.current_workplace || "").trim();
+                const fb = (b.current_workplace || "").trim();
+                const aEmpty = fa === "";
+                const bEmpty = fb === "";
+                if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
+                const firmCmp = compareCI(fa, fb);
+                if (firmCmp !== 0) return firmCmp;
+
+                return compareCI(a.name, b.name);
+            });
+
+        return sorted;
+    };
 
     useEffect(() => {
-        // If external data provided, use it
         if (Array.isArray(attorneysProp) && attorneysProp.length > 0) {
             setAttorneys(processList(attorneysProp));
             return;
         }
 
-        // Otherwise fetch from backend
         const fetchAttorneys = async () => {
             try {
-                const response = await api.get("/dashboard/get-attorneys-user");
-                const data = response.data || [];
+                const { data = [] } = await api.get("/dashboard/get-attorneys-user");
                 setAttorneys(processList(data));
             } catch (err) {
                 console.error("Error fetching attorneys:", err);
             }
         };
 
-        // fetchAttorneys();    // uncomment later
+        // fetchAttorneys(); // enable when backend endpoint is ready
     }, [attorneysProp]);
 
     return (
@@ -68,8 +94,8 @@ const AttorneyWidget = ({ attorneys: attorneysProp }) => {
                     summary={attorney.summary}
                     tags={attorney.tags}
                     visibilityScore={attorney.visibility_score}
+                    tier={attorney.tier}
                 />
-
             ))}
         </div>
     );

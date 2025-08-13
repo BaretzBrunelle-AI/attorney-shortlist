@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "EB Garamond", Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -11,6 +11,17 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --prussian-blue: #223244ff;
+  --silver-lake-blue: #5b89bbff;
+  --blue-gray: #6497ceff;
+  --powder-blue: #91accaff;
+  --paynes-gray: #556e8bff;
+  --slate-gray: #7e8da0ff;
+  --davys-gray: #53555bff;
+  --onyx: #3b3c40ff;
+  --white-smoke: #f4f5f5ff;
+  --timberwolf: #d5d5d7ff;
 }
 
 body {

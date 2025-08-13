@@ -2,15 +2,16 @@ import axios from "axios";
 import { getToken } from "./reusable_config.jsx"
 
 const api = axios.create({
-	baseURL: import.meta.env.VITE_BACKEND_URL
+	baseURL: import.meta.env.VITE_API_BASE
 });
 
 api.interceptors.request.use(async (config) => {
+	// Always send cookies
+	config.withCredentials = true;
 	// Only attach token if not explicitly disabled
 	if (config.requiresAuth === false) return config;
 
-
-	const token = await getToken();
+	const token = await getToken(config.admin === true);
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`;
 	}

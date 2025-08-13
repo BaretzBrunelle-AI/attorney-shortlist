@@ -3,12 +3,13 @@ import React, {useState} from "react";
 import "./attorney_mod.css";
 
 // icons
-import linkedin from "../../assets/icons/linkedin.png";
-import worldwideweb from "../../assets/icons/www.png";
+import linkedin from "../../assets/icons/social.png";
+import worldwideweb from "../../assets/icons/internet.png";
 import briefcase from "../../assets/icons/briefcase.png";
 import mail from "../../assets/icons/mail.png";
 import pin from "../../assets/icons/pin.png";
 import phone from "../../assets/icons/phone-call.png";
+import visibility from "../../assets/icons/witness.png";
 
 const AttorneyModule = ({
     name,
@@ -21,7 +22,8 @@ const AttorneyModule = ({
     phoneNumber,
     email,
     summary,
-    tags
+    tags,
+    visibilityScore,
 }) => {
 
     const [showAllTags, setShowAllTags] = useState(false);
@@ -37,11 +39,12 @@ const AttorneyModule = ({
         <div className="attorney-module-main-container">
             <div className="basics-main-container">
                 <div className="basics-hemisphere-one">
-                    <div className="attorney-image-main-container">
+                    <div className={visibilityScore ? "attorney-image-main-container-with-visibility" : "attorney-image-main-container"}>
                         <img className="attorney-headshot" alt="attorney-headshot" src={image}/>
                     </div>
                     <div className="basics-attorney-name-links">
                         <div className="attorney-name">{name}</div>
+                        <div className="attorney-jd-year">JD Year: {jdYear}</div>
                         <div className="attorney-links">
                             {linkedinURL && (
                                 <a className="attorney-linkedin-hyperlink" href={linkedinURL}>
@@ -54,7 +57,6 @@ const AttorneyModule = ({
                                 </a>
                             )}
                         </div>
-                        <div className="attorney-jd-year">JD Year: {jdYear}</div>
                     </div>
                 </div>
                 <div className="basics-hemisphere-two">
@@ -74,6 +76,16 @@ const AttorneyModule = ({
                         {email}
                         <img className="attorney-email-icon" alt="attorney-email-icon" src={mail} />
                     </div>
+                    {visibilityScore ? (
+                        <div className="attorney-visibility-score">
+                            Visibility Score: {visibilityScore}
+                            <img
+                            className="attorney-visibility-icon"
+                            alt="visibility-score-icon"
+                            src={visibility}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             </div>
             <div className="summary-main-container">{summary}</div>

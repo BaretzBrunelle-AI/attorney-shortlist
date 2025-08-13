@@ -7,46 +7,49 @@ import api from "../../config/axios_config.jsx";
 // css
 import "./attorney_widget.css";
 
-const AttorneyWidget = () => {
+const AttorneyWidget = ({ attorneys: attorneysProp }) => {
     const [attorneys, setAttorneys] = useState([]);
 
+    const processList = (data) =>
+        data.map((attorney) => {
+            const safeName = (attorney?.name || "").trim();
+            const nameKey = safeName.replace(/\s+/g, "_") + "_headshot";
+
+            let imageURL;
+            const cachedImage = localStorage.getItem(nameKey);
+
+            if (cachedImage && cachedImage === attorney.image) {
+                imageURL = cachedImage;
+            } else if (attorney.image) {
+                imageURL = attorney.image;
+                localStorage.setItem(nameKey, imageURL);
+            } else {
+                imageURL = undefined;
+            }
+
+            return { ...attorney, image: imageURL };
+        });
+
     useEffect(() => {
-       const fetchAttorneys = async () => {
+        // If external data provided, use it
+        if (Array.isArray(attorneysProp) && attorneysProp.length > 0) {
+            setAttorneys(processList(attorneysProp));
+            return;
+        }
+
+        // Otherwise fetch from backend
+        const fetchAttorneys = async () => {
             try {
                 const response = await api.get("/dashboard/get-attorneys");
-                const data = response.data;
-
-                const processedData = data.map(attorney => {
-                    const nameKey = attorney.name.replace(/\s+/g, "_") + "_headshot";
-                    
-                    let imageURL;
-                    // Check localStorage for existing image URL
-                    const cachedImage = localStorage.getItem(nameKey);
-                    if (cachedImage && cachedImage === attorney.image) {
-                        imageURL = cachedImage;
-                    } else {
-                        if (attorney.image) {
-                            imageURL = attorney.image;
-                            localStorage.setItem(nameKey, imageURL);
-                        } else {
-                            imageURL = ""; // Fallback if no image
-                        }
-                    }
-
-                    return {
-                        ...attorney,
-                        image: imageURL
-                    };
-                });
-
-                setAttorneys(processedData);
+                const data = response.data || [];
+                setAttorneys(processList(data));
             } catch (err) {
                 console.error("Error fetching attorneys:", err);
             }
         };
 
         fetchAttorneys();
-    }, []);
+    }, [attorneysProp]);
 
     return (
         <div className="attorney-widget-main-container">
@@ -64,7 +67,9 @@ const AttorneyWidget = () => {
                     email={attorney.email}
                     summary={attorney.summary}
                     tags={attorney.tags}
+                    visibilityScore={attorney.visibility_score}
                 />
+
             ))}
         </div>
     );

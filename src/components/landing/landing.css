@@ -1,0 +1,22 @@
+.landing-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
+.landing-toggle-link {
+	background: none;
+	border: none;
+	padding: 0;
+	color: var(--paynes-gray);
+	cursor: default;
+	font: inherit;
+	font-size: small;
+}
+
+.landing-toggle-link:hover {
+	color: var(--davys-gray);
+	cursor: pointer;
+}

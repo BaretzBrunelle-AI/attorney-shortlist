@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { verifyToken } from "../../config/reusable_config.jsx";
+import { useOutletContext } from "react-router-dom";
 import api from "../../config/axios_config.jsx";
 
 import "./admin_upload.css";
 
-// components
-import AdminNav from "../admin/admin_nav.jsx";
-
 const AdminUpload = () => {
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const isAdmin = searchParams.get("isAdmin") === "true";
+    const { selectedProject, setSelectedProject } = useOutletContext() || {};
 
     const [projectTitle, setProjectTitle] = useState("");
     const [headerTitle, setHeaderTitle] = useState("");
@@ -19,43 +13,25 @@ const AdminUpload = () => {
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState("");
 
-    const [selectedProject, setSelectedProject] = useState("Select Project");
+    const [usesVS, setUsesVS] = useState(false);
+
     const [availableProjects, setAvailableProjects] = useState([]);
 
     const [missingImages, setMissingImages] = useState([]);
-
-    const verify = async () => {
-        const verified = await verifyToken();
-        if (!verified) {
-            console.log("Token could not be verified");
-            navigate("/dashboard");
-        }
-    };
+    const [downloading, setDownloading] = useState(false);
 
     const findProjects = async () => {
         try {
-            const response = await api.get("/admin/get-projects");
-            if (response.data?.projects) {
-                setAvailableProjects(response.data.projects);
-            } else {
-                console.error("Failed to fetch projects");
-            }
+            const response = await api.get("/admin/get-projects", { admin: true });
+            if (response.data?.projects) setAvailableProjects(response.data.projects);
         } catch (err) {
             console.error("Error fetching projects:", err);
         }
     };
 
     useEffect(() => {
-        if (isAdmin) {
-            verify();
-        } else {
-            navigate("/dashboard");
-        }
-    }, []);
-
-    useEffect(() => {
         findProjects();
-    },[]);
+    }, []);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -70,11 +46,12 @@ const AdminUpload = () => {
         formData.append("header_title", headerTitle);
         formData.append("header_subtitle", headerSubtitle);
 
+        formData.append("uses_vs", String(usesVS));
+
         try {
             const res = await api.post("/admin/upload-attorneys", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
+                headers: { "Content-Type": "multipart/form-data" },
+                admin: true,
             });
             setMessage(res.data || "Upload successful");
         } catch (err) {
@@ -91,13 +68,10 @@ const AdminUpload = () => {
     const checkImages = async (project) => {
         try {
             const response = await api.get("/admin/check-images", {
-                params: { project_name: project }
+                params: { project_name: project },
+                admin: true,
             });
-            if (response.data?.attorneys) {
-                setMissingImages(response.data.attorneys);
-            } else {
-                setMissingImages([]);
-            }
+            setMissingImages(response.data?.attorneys || []);
         } catch (err) {
             console.error("Failed to check images:", err);
             setMissingImages([]);
@@ -116,9 +90,8 @@ const AdminUpload = () => {
 
         try {
             const response = await api.post("/admin/upload-attorney-image", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
+                headers: { "Content-Type": "multipart/form-data" },
+                admin: true,
             });
             console.log("Upload success:", response.data);
             setMissingImages((prev) =>
@@ -133,7 +106,7 @@ const AdminUpload = () => {
                 setMissingImages((prev) =>
                     prev.filter((attorney) => attorney.attorney_id !== attorneyId)
                 );
-            }, 3000); // 3 seconds
+            }, 3000);
             return true;
         } catch (err) {
             console.error("Upload failed:", err?.response?.data || err.message);
@@ -141,16 +114,50 @@ const AdminUpload = () => {
         }
     };
 
+    const handleDownloadShortlist = async () => {
+        if (!selectedProject || downloading) return;
+        setDownloading(true);
+        try {
+            const project = selectedProject;
+            if (!project) return;
+            const res = await api.post("/dashboard/download-shortlist",
+                { 
+                    project_title: project 
+                },
+                { 
+                    responseType: "arraybuffer", 
+                    admin: true 
+                }
+            );
+
+            const type = res.headers["content-type"] || "application/pdf";
+            const blob = new Blob([res.data], { type });
+
+            let filename = `${project.replace(/\s+/g, "_")}_attorneys.pdf`;
+            const dispo = res.headers["content-disposition"];
+            const m = dispo && /filename\*?=(?:UTF-8'')?["']?([^"';]+)["']?/i.exec(dispo);
+            if (m && m[1]) filename = decodeURIComponent(m[1]);
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error("Error downloading shortlist:", err);
+            alert("Failed to download shortlist. Please try again.");
+        } finally {
+            setDownloading(false);
+        }
+    };
+
+    const selectedValue = selectedProject && selectedProject !== "Select Project" ? selectedProject : "";
+
     return (
         <div className="admin-upload-outer-container">
-            <div className="admin-nav-sub-container">
-                {isAdmin && (
-                    <AdminNav
-                        selectedProject={selectedProject}
-                        setSelectedProject={handleProjectSelect}
-                    />
-                )}
-            </div>
             <div className="admin-upload-main-container">
                 <div className="admin-upload-section-one">
                     <div className="upload-new-shortlist-container">
@@ -188,6 +195,31 @@ const AdminUpload = () => {
                                     onChange={(e) => setHeaderSubtitle(e.target.value)}
                                 />
                             </label>
+
+                            <fieldset className="visibility-score-fieldset">
+                                <legend>Visibility Score</legend>
+                                <label style={{ display: "block" }}>
+                                    <input
+                                        type="radio"
+                                        name="uses_vs"
+                                        value="false"
+                                        checked={!usesVS}
+                                        onChange={() => setUsesVS(false)}
+                                    />
+                                    No visibility score (default)
+                                </label>
+                                <label style={{ display: "block" }}>
+                                    <input
+                                        type="radio"
+                                        name="uses_vs"
+                                        value="true"
+                                        checked={usesVS}
+                                        onChange={() => setUsesVS(true)}
+                                    />
+                                    Show visibility score
+                                </label>
+                            </fieldset>
+
                             <label>
                                 CSV File:
                                 <input
@@ -198,12 +230,22 @@ const AdminUpload = () => {
                                     required
                                 />
                             </label>
+
                             <button id="upload-submit-button" type="submit">Upload</button>
                         </form>
+
+                        {usesVS && (
+                            <p className="helper-text">
+                                Make sure your CSV includes a <code>visibility_score</code> column.
+                            </p>
+                        )}
+
                         {message && <p className="upload-status">{message}</p>}
                     </div>
+                </div>
+                <div className="admin-upload-section-two">
                     <div className="upload-attorney-images-container">
-                        <div className="section-title">Upload Attorney Images</div> <br/>
+                        <div className="section-title">Upload Attorney Images</div> <br />
                         <button
                             className="clear-list"
                             onClick={() => handleClearList()}
@@ -211,26 +253,29 @@ const AdminUpload = () => {
                         >
                             Clear List
                         </button>
-                        <div className="project-dropdown-wrapper">
-                            <div className="select-project">
-                                {selectedProject || "Select Project"}
-                            </div>
-
-                            <div className="upload-find-projects-dropdown">
+                        <div className="project-select-wrapper">
+                            <label htmlFor="project-select">Select Project: </label>
+                            <select
+                                id="project-select"
+                                className="admin-upload-project-select"
+                                value={selectedValue}
+                                onChange={(e) => handleProjectSelect(e.target.value || "Select Project")}
+                            >
+                                <option value="" disabled>
+                                    Select Project
+                                </option>
                                 {availableProjects.length > 0 ? (
                                     availableProjects.map((project, idx) => (
-                                        <div
-                                            key={idx}
-                                            className="upload-find-projects-item"
-                                            onClick={() => handleProjectSelect(project)}
-                                        >
+                                        <option key={idx} value={project}>
                                             {project}
-                                        </div>
+                                        </option>
                                     ))
                                 ) : (
-                                    <div className="upload-find-projects-item">No projects found</div>
+                                    <option value="" disabled>
+                                        No projects found
+                                    </option>
                                 )}
-                            </div>
+                            </select>
                         </div>
                         {missingImages.length > 0 && (
                             <div className="attorney-image-upload-list">
@@ -263,8 +308,42 @@ const AdminUpload = () => {
                         )}
                     </div>
                 </div>
-                <div className="admin-upload-section-two">
-
+                <div className="admin-upload-section-three">
+                    <div className="attorney-shortlist-download-container">
+                        <div className="project-select-wrapper">
+                            <label htmlFor="project-select">Select Project: </label>
+                            <select
+                                id="project-select"
+                                className="admin-upload-project-select"
+                                value={selectedValue}
+                                onChange={(e) => handleProjectSelect(e.target.value || "Select Project")}
+                            >
+                                <option value="" disabled>
+                                    Select Project
+                                </option>
+                                {availableProjects.length > 0 ? (
+                                    availableProjects.map((project, idx) => (
+                                        <option key={idx} value={project}>
+                                            {project}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option value="" disabled>
+                                        No projects found
+                                    </option>
+                                )}
+                            </select>
+                        </div>
+                        <button
+                            type="button"
+                            className="admin-sidebar-link"
+                            onClick={handleDownloadShortlist}
+                            disabled={!selectedValue || downloading}
+                            aria-busy={downloading}
+                        >
+                            {downloading ? <span className="spinner" aria-hidden="true" /> : "Download Project Shortlist"}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

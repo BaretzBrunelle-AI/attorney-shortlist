@@ -7,7 +7,7 @@ import "./admin_login.css";
 import api from "../../config/axios_config.jsx";
 
 // modules
-import { saveToken } from "../../config/reusable_config.jsx";
+import { saveToken, saveValue } from "../../config/reusable_config.jsx";
 
 const AdminLogin = () => {
     const [name, setName] = useState("");
@@ -31,11 +31,10 @@ const AdminLogin = () => {
                 },
                 {requiresAuth: false}
             );
-
-            console.log(response)
             
             if (response.data.token) {
-                await saveToken(response.data.token);
+                await saveToken(response.data.token, true);
+                await saveValue("user_type", "admin");
                 navigate("/dashboard");
             } else {
                 setPageMsg("Login failed. Please check your credentials.");
@@ -113,10 +112,10 @@ const AdminLogin = () => {
 
     return (
         <div className="login-container">
-            <div className="login-page-title">{logRegInv.toUpperCase()}</div>
             {logRegInv === "login" && (
                 <div className="login-module">
-                    <div className="page-message">{pageMsg}</div>
+                    <div className="login-page-title">{logRegInv.toUpperCase()}</div>
+                    {pageMsg ? <div className="page-message">{pageMsg}</div> : ""}
                     <form className="login-form" onSubmit={handleLogin}>
                         <input
                             id="email-input"

@@ -1,6 +1,6 @@
 :root {
     --form-field-bg-color: rgb(77, 77, 77);
-    --upload-form-button-bg-color:rgb(227, 227, 227);
+    --upload-form-button-bg-color: rgb(227, 227, 227);
     --bw-text-color: black;
 }
 
@@ -17,42 +17,85 @@
 }
 
 .admin-upload-main-container {
-    max-height: 80vh;
+    display: grid;
+    gap: 30px;
     padding: 10px 20px;
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
+    max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    align-items: start;
+
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    grid-template-rows: auto auto;
 }
 
-.admin-upload-section-one {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+@media (min-width: 1100px) {
+    .admin-upload-main-container {
+        grid-template-columns: repeat(3, minmax(300px, 1fr));
+    }
 }
 
-.upload-new-shortlist-container {
+@supports selector(:has(*)) {
+    .admin-upload-main-container:has(> *:nth-child(4)) {
+        grid-template-columns: repeat(2, minmax(300px, 1fr));
+    }
+}
+
+/* panels */
+.admin-upload-section-one,
+.admin-upload-section-two,
+.admin-upload-section-three {
     display: flex;
     flex-direction: column;
-    width: 20vw;
-    max-width: 20vw;
-    background-color: grey;
-    box-shadow: 10px 10px rgb(57, 143, 255);
+    gap: 16px;
+    min-width: 0;
+    height: 100%;
+}
+
+.upload-new-shortlist-container,
+.upload-attorney-images-container,
+.attorney-shortlist-download-container {
+    width: 100%;
+    max-width: none;
+    background-color: var(--davys-gray);
     padding: 10px;
+    border-radius: 10px;
+    color: var(--white-smoke);
+    height: 100%;
+    overflow-x: none;
+}
+
+.attorney-shortlist-download-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .upload-attorney-images-container {
-    width: 20vw;
-    max-width: 20vw;
-    display: flex;
-    flex-direction: column;
-    max-width: 20vw;
-    background-color: grey;
-    box-shadow: 10px 10px rgb(57, 143, 255);
-    height: 100%;
-    overflow-y: scroll;
-    min-height: 200px;
-    padding: 10px;
+    overflow-y: auto;
+    max-height: 70vh;
 }
+
+.admin-upload-project-select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--timberwolf);
+    background: var(--white-smoke);
+    color: var(--onyx);
+}
+
+.clear-list,
+.admin-sidebar-link,
+#upload-submit-button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--timberwolf);
+    background: var(--blue-gray);
+    color: #fff;
+    cursor: pointer;
+}
+
 
 .attorney-image-upload-list {
     max-width: 100%;
@@ -66,7 +109,7 @@
 }
 
 .attorney-image-upload-form button,
-.attorney-image-upload-form label input::file-selector-button{
+.attorney-image-upload-form label input::file-selector-button {
     background-color: var(--upload-form-button-bg-color);
     border-radius: 5px;
     color: var(--bw-text-color);
@@ -159,7 +202,7 @@
     display: none;
     position: absolute;
     top: 100%;
-    left: 50%;                       
+    left: 50%;
     transform: translateX(-50%);
     background-color: white;
     border: 1px solid #ccc;

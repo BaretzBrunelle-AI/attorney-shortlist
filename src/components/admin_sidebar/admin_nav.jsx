@@ -18,14 +18,14 @@ const AdminNav = ({ selectedProject, setSelectedProject, onAttorneysLoaded }) =>
         const fetchProjects = async () => {
             try {
                 const response = await api.get("/admin/get-projects", { admin: true });
-                if (response.data?.projects) 
+                if (response.data?.projects)
                     setAvailableProjects(response.data.projects);
             } catch (err) {
                 console.error("Error fetching projects:", err);
             }
         };
         fetchProjects();
-    
+
     }, []);
 
     const fetchAttorneysForProject = async (project) => {
@@ -60,12 +60,12 @@ const AdminNav = ({ selectedProject, setSelectedProject, onAttorneysLoaded }) =>
             const project = selectedProject;
             if (!project) return;
             const res = await api.post("/dashboard/download-shortlist",
-                { 
-                    project_title: project 
+                {
+                    project_title: project
                 },
-                { 
-                    responseType: "arraybuffer", 
-                    admin: true 
+                {
+                    responseType: "arraybuffer",
+                    admin: true
                 }
             );
 
@@ -90,6 +90,16 @@ const AdminNav = ({ selectedProject, setSelectedProject, onAttorneysLoaded }) =>
             alert("Failed to download shortlist. Please try again.");
         } finally {
             setDownloading(false);
+        }
+    };
+
+    const handleLogout = () => {
+        try {
+            localStorage.clear();
+        } catch (e) {
+            console.error("Failed to clear storage:", e);
+        } finally {
+            navigate("/landing", { replace: true });
         }
     };
 
@@ -142,7 +152,7 @@ const AdminNav = ({ selectedProject, setSelectedProject, onAttorneysLoaded }) =>
             <button
                 type="button"
                 className="admin-sidebar-link"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/client/dashboard")}
                 aria-label="Open User Dashboard"
                 title="User Dashboard"
             >
@@ -158,7 +168,7 @@ const AdminNav = ({ selectedProject, setSelectedProject, onAttorneysLoaded }) =>
             <button
                 type="button"
                 className="admin-sidebar-link"
-                onClick={() => navigate("/admin/dashboard")}
+                onClick={() => navigate("/client/admin/dashboard")}
                 aria-label="Open Admin Dashboard"
                 title="Admin Dashboard"
             >
@@ -169,6 +179,17 @@ const AdminNav = ({ selectedProject, setSelectedProject, onAttorneysLoaded }) =>
                     aria-hidden="true"
                 />
                 <span>Admin Dashboard</span>
+            </button>
+
+            <div style={{ flex: 1 }} />
+
+            <button
+                type="button"
+                className="admin-sidebar-link logout"
+                onClick={handleLogout}
+                title="Log out"
+            >
+                Log out
             </button>
         </aside>
     );

@@ -4,16 +4,21 @@ import api from "./axios_config";
 export async function saveToken(token, admin = false) {
     if (admin) {
         localStorage.setItem("admin_token", token);
+    } else {
+        localStorage.setItem("access_token", token);
     }
-    localStorage.setItem("access_token", token);
+    return;
 }
 
 export async function getToken(admin = false) {
     if (admin) {
         const adminToken = localStorage.getItem("admin_token");
         return adminToken;
+    } else {
+        const userToken = localStorage.getItem("access_token");
+        return userToken;
     }
-    return localStorage.getItem("access_token");
+    return;
 }
 
 export async function deleteToken() {

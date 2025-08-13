@@ -35,7 +35,7 @@ const AdminLogin = () => {
             if (response.data.token) {
                 await saveToken(response.data.token, true);
                 await saveValue("user_type", "admin");
-                navigate("/dashboard");
+                navigate("/client/dashboard");
             } else {
                 setPageMsg("Login failed. Please check your credentials.");
             }

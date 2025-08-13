@@ -42,15 +42,13 @@ const AttorneyWidget = ({ attorneys: attorneysProp }) => {
             try {
                 const response = await api.get("/dashboard/get-attorneys-user");
                 const data = response.data || [];
-                setAttorneys([]);   // TODO: remove after testing
-                return;
                 setAttorneys(processList(data));
             } catch (err) {
                 console.error("Error fetching attorneys:", err);
             }
         };
 
-        fetchAttorneys();
+        // fetchAttorneys();    // uncomment later
     }, [attorneysProp]);
 
     return (

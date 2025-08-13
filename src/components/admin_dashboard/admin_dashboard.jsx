@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { replace, useNavigate, useOutletContext } from "react-router-dom";
 import { getValue, verifyToken } from "../../config/reusable_config.jsx";
 import api from "../../config/axios_config.jsx";
 
@@ -13,18 +13,18 @@ const AdminDashboard = () => {
 	const { attorneys } = useOutletContext?.() || {};
 
 	useEffect(() => {
-		const checkAdmin = async () => {
-			const userType = await getValue("user_type");
-			if (userType === "admin") {
-				const ok = await verifyToken(true);
-				if (!ok) {
-					console.log("Token could not be verified");
-					navigate("/landing");
-				}
-			}
-		};
-		checkAdmin();
-	}, []);
+		(async () => {
+		const userType = await getValue("user_type");
+		if (userType !== "admin") {
+			navigate("/landing", { replace: true });
+			return;
+		}
+		const ok = await verifyToken(true);
+		if (!ok) {
+			navigate("/landing", { replace: true });
+		}
+		})();
+	}, [navigate]);
 
 	return (
 		<div className="admin-dashboard">

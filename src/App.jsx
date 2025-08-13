@@ -14,8 +14,8 @@ function App() {
 				<Routes>
 					{/* Routes WITH Layout */}
 					<Route element={<Layout />}>
-						<Route path="/dashboard" element={<Dashboard />} />
-						<Route path="/admin/dashboard" element={<AdminDashboard />} />
+						<Route path="/client/dashboard" element={<Dashboard />} />
+						<Route path="/client/admin/dashboard" element={<AdminDashboard />} />
 					</Route>
 
 					{/* Default route fallback */}

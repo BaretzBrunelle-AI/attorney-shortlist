@@ -174,6 +174,7 @@ const AdminUpload = () => {
                                     required
                                 />
                             </label>
+                            <div className="upload-input-message">Note: Project title is case sensitive<br/>Used for limiting user access to specified project</div>
                             <label>
                                 Header Title:
                                 <input
@@ -195,10 +196,12 @@ const AdminUpload = () => {
                                     onChange={(e) => setHeaderSubtitle(e.target.value)}
                                 />
                             </label>
-
+                            <div className="upload-input-message">Note: Header title and subtitle will display on PDF header</div>
                             <fieldset className="visibility-score-fieldset">
                                 <legend>Visibility Score</legend>
-                                <label style={{ display: "block" }}>
+                                <label 
+                                    id="visibility-score-option" 
+                                >
                                     <input
                                         type="radio"
                                         name="uses_vs"
@@ -208,7 +211,9 @@ const AdminUpload = () => {
                                     />
                                     No visibility score (default)
                                 </label>
-                                <label style={{ display: "block" }}>
+                                <label 
+                                    id="visibility-score-option"
+                                >
                                     <input
                                         type="radio"
                                         name="uses_vs"

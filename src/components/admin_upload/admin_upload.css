@@ -229,3 +229,21 @@
     background-color: rgb(149, 48, 167);
     color: white;
 }
+
+.upload-input-message {
+    font-size: small;
+    color: rgb(82, 218, 255);
+}
+
+.visibility-score-fieldset {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#visibility-score-option {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    font-size: medium;
+}

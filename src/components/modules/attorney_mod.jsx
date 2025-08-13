@@ -47,12 +47,22 @@ const AttorneyModule = ({
                         <div className="attorney-jd-year">JD Year: {jdYear}</div>
                         <div className="attorney-links">
                             {linkedinURL && (
-                                <a className="attorney-linkedin-hyperlink" href={linkedinURL}>
+                                <a 
+                                    className="attorney-linkedin-hyperlink" 
+                                    href={linkedinURL}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
                                     <img className="attorney-linkedin" alt="attorney-linkedin" src={linkedin} />
                                 </a>
                             )}
                             {websiteURL && (
-                                <a className="attorney-website-hyperlink" href={websiteURL}>
+                                <a 
+                                    className="attorney-website-hyperlink" 
+                                    href={websiteURL}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                >
                                     <img className="attorney-website" alt="attorney-website" src={worldwideweb} />
                                 </a>
                             )}

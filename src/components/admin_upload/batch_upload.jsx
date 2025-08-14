@@ -253,17 +253,15 @@ const BatchImageUploader = ({ attorneys = [], setMissingImages, disabled = false
 	return (
 		<div className="batch-uploader-container">
 			<div className="section-title">Batch Upload Attorney Images</div>
-
-			<input
-				type="file"
-				accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-				multiple
-				onChange={onFilesChosen}
-				disabled={disabled}
-				className="batch-file-input"
-			/>
-
 			<div className="batch-actions">
+				<input
+					type="file"
+					accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+					multiple
+					onChange={onFilesChosen}
+					disabled={disabled}
+					className="batch-file-input"
+				/>
 				<button
 					onClick={uploadAll}
 					disabled={disabled || uploading || readyCount === 0}
@@ -287,26 +285,27 @@ const BatchImageUploader = ({ attorneys = [], setMissingImages, disabled = false
 
 					<div className="batch-table">
 						<div className="batch-row batch-header">
-							<div>Image</div>
-							<div>Detected Name</div>
-							<div>Suggested Attorney</div>
-							<div>Confidence</div>
-							<div>Choose / Confirm</div>
-							<div>Status</div>
+							<div className="batch-title-img-name">Image</div>
+							<div className="batch-title-detected-name">Detected Name</div>
+							<div className="batch-title-suggestion-name">Matched Name</div>
+							<div className="batch-title-suggestion-score">Match Score</div>
+							<div className="batch-title-attorney-select">Choose / Confirm</div>
+							<div className="batch-title-status-msg">Status</div>
 						</div>
 
 						{rows.map((r, idx) => (
 							<div key={idx} className={`batch-row ${r.status}`}>
-								<div title={r.file.name}>{r.file.name}</div>
-								<div>{r.base}</div>
-								<div>{r.suggestion ? r.suggestion.name : <em>None</em>}</div>
-								<div>{r.suggestion ? r.suggestion.score.toFixed(3) : "-"}</div>
+								<div className="batch-img-name" title={r.file.name}>{r.file.name}</div>
+								<div className="batch-detected-name">{r.base}</div>
+								<div className="batch-suggestion-name">{r.suggestion ? r.suggestion.name : <em>None</em>}</div>
+								<div className="batch-suggestion-score">{r.suggestion ? r.suggestion.score.toFixed(2) : "-"}</div>
 								<div>
 									<select
 										value={r.selectedId || ""}
 										onChange={(e) => updateSelection(idx, e.target.value || null)}
+										className="batch-attorney-select"
 									>
-										<option value="">-- Select attorney --</option>
+										<option value="">Select attorney</option>
 										{r.options.map((opt) => (
 											<option key={opt.attorney_id} value={opt.attorney_id}>
 												{opt.name} {opt.score >= 0.9 ? "✓" : ""}
@@ -314,16 +313,16 @@ const BatchImageUploader = ({ attorneys = [], setMissingImages, disabled = false
 										))}
 									</select>
 								</div>
-								<div>
+								<div className="batch-status-msg" >
 									{r.result === "success" && <span className="ok">{r.msg || "Uploaded"}</span>}
 									{r.result === "error" && <span className="err">{r.msg || "Failed"}</span>}
 									{!r.result &&
 										(r.status === "ready" ? (
 											<span className="ready">Ready</span>
 										) : r.status === "review" ? (
-											<span className="review">Needs review</span>
+											<span className="review">Review</span>
 										) : (
-											<span className="unmatched">Unmatched</span>
+											<span className="unmatched">No Match</span>
 										))}
 								</div>
 							</div>

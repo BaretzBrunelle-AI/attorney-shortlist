@@ -26,7 +26,7 @@
     align-items: start;
 
     grid-template-columns: repeat(2, minmax(280px, 1fr));
-    grid-template-rows: 60% 31%;
+    grid-template-rows: 56% 35%;
 }
 
 @media (min-width: 1100px) {
@@ -100,6 +100,20 @@
     border-bottom: 1px solid #222;
     padding-bottom: 5px;
     display: flex;
+    flex-direction: row;
+}
+
+.attorney-image-upload-item {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attorney-image-upload-item .attorney-name {
+    color: var(--timberwolf);
+    font-size: small;
 }
 
 .attorney-image-upload-form button,
@@ -227,7 +241,8 @@
     color: white;
 }
 
-.upload-input-message {
+.upload-input-message,
+.helper-text {
     font-size: small;
     color: rgb(82, 218, 255);
 }

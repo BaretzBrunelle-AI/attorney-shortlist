@@ -4,7 +4,7 @@
 	border-radius: 12px;
 	padding: 10px;
 	background-color: var(--davys-gray);
-	max-height: 29vh;
+	max-height: 33vh;
 }
 
 .batch-summary {
@@ -12,6 +12,7 @@
 	gap: 16px;
 	margin: 8px 0 12px;
 	font-size: 0.95rem;
+	justify-content: center;
 }
 
 .batch-table {
@@ -20,24 +21,80 @@
 	max-height: 100%;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	border-radius: 5px;
+	border: 1px solid var(--onyx)
 }
 
 .batch-row {
-	display: grid;
-	grid-template-columns: 2fr 1.5fr 2fr 1fr 2fr 1fr;
-	gap: 8px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 	align-items: center;
 	background: #fff;
 	border: 1px solid #e6e8ee;
 	border-radius: 8px;
 	padding: 8px;
-	font-size: 0.95rem;
+	font-size: 12px;
+	width: 95%;
+	overflow: hidden;
+	height: fit-content;
+}
+
+.batch-attorney-select {
+	color: black;
 }
 
 .batch-header {
 	background: var(--powder-blue, #dbe9f4);
-	font-weight: 600;
+	font-weight: bold;
+	font-size: small;
+	overflow: hidden;
 }
+
+.batch-title-status-msg, 
+.batch-status-msg {
+	max-width: 75px;
+	min-width: 75px;
+	text-align: right;
+}
+
+.batch-title-attorney-select,
+.batch-attorney-select {
+	min-width: 115px;
+	max-width: 115px;
+}
+
+.batch-title-img-name,
+.batch-img-name {
+	min-width: 75px;
+	max-width: 75px;
+	text-align: center;
+}
+
+
+.batch-title-suggestion-score,
+.batch-suggestion-score {
+	min-width: 40px;
+	max-width: 40px;
+	text-align: center;
+}
+
+.batch-title-suggestion-name,
+.batch-suggestion-name {
+	min-width: 75px;
+	max-width: 75px;
+	text-align: center;
+}
+
+.batch-title-detected-name, 
+.batch-detected-name {
+	min-width: 75px;
+	max-width: 75px;
+	text-wrap: wrap;
+	text-align: center;
+}
+
+
 
 .batch-row.ready {
 	border-left: 4px solid #3fb950;
@@ -75,7 +132,15 @@
 
 .batch-actions {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: center;
+	padding-top: 10px;
+}
+
+.batch-upload-button,
+.batch-actions input::file-selector-button {
+	background-color: var(--timberwolf);
+	color: var(--onyx);
+	border-radius: 5px;
 }
 
 .batch-upload-button[aria-busy="true"] {

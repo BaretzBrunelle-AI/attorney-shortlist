@@ -227,6 +227,11 @@ const AdminUpload = () => {
                             />
                             Show visibility score
                         </label>
+                        {usesVS && (
+                            <div className="helper-text">
+                                Make sure your CSV includes a "<code>visibility_score</code>" column.
+                            </div>
+                        ) || <br/>}
                     </fieldset>
 
                     <label>
@@ -242,14 +247,7 @@ const AdminUpload = () => {
 
                     <button id="upload-submit-button" type="submit">Upload</button>
                 </form>
-
-                {usesVS && (
-                    <p className="helper-text">
-                        Make sure your CSV includes a <code>visibility_score</code> column.
-                    </p>
-                )}
-
-                {message && <p className="upload-status">{message}</p>}
+                {message && <div className="upload-status">{message}</div>}
             </div>
 
             {/* 2) Upload Attorney Images */}
@@ -301,14 +299,16 @@ const AdminUpload = () => {
                                     if (f) await handleUploadImage(attorney.attorney_id, f);
                                 }}
                             >
-                                <div className="attorney-name">{attorney.name}</div>
-                                <input
-                                    className="attorney-file-input"
-                                    type="file"
-                                    name={`image-${attorney.attorney_id}`}
-                                    accept="image/*"
-                                    required
-                                />
+                                <div className="attorney-image-upload-item">
+                                    <div className="attorney-name">{attorney.name}</div>
+                                    <input
+                                        className="attorney-file-input"
+                                        type="file"
+                                        name={`image-${attorney.attorney_id}`}
+                                        accept="image/*"
+                                        required
+                                    />
+                                </div>
                                 <button type="submit">Upload</button>
                             </form>
                         ))}

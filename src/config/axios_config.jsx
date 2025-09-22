@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "./reusable_config.jsx"
 
-const baseURL = import.meta.env.DEV ? "" : import.meta.env.VITE_API_BASE || "";
+const baseURL = import.meta.env.VITE_API_BASE || "";
 
 const api = axios.create({
 	baseURL: baseURL,

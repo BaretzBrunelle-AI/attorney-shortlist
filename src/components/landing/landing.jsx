@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 // adjust these paths to wherever your components live
-import UserLogin from "../user_login/userLogin.jsx";
-import AdminLogin from "../admin_login/admin_login.jsx";
+import UserLogin from "../client/login/login.jsx";
+import AdminLogin from "../admin/login/login.jsx";
 
 import "./landing.css";
 

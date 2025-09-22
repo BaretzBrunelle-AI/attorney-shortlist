@@ -1,0 +1,18 @@
+.client-dashboard-layout {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.client-dashboard-body {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	overflow: hidden;
+}
+
+.client-layout-content {
+	flex: 1;
+	overflow-y: auto;
+}

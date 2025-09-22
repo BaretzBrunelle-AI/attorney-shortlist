@@ -1,26 +1,37 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 
-// Routes
-import Layout from "./components/layout/layout";
-import Dashboard from "./components/dashboard/dashboard";
-import Landing from "./components/landing/landing";
-import AdminDashboard from "./components/admin_dashboard/admin_dashboard";
+// Layouts
+import ClientLayout from "./components/client/layout/layout.jsx";
+import AdminLayout from "./components/admin/layout/layout.jsx";
+
+// Pages
+import Dashboard from "./components/client/dashboard/dashboard.jsx";
+import Landing from "./components/landing/landing.jsx";
+import CreateShortlist from "./components/admin/createshortlist/createshortlist.jsx";
+import UploadImages from "./components/admin/uploadimages/uploadimages.jsx";
 
 function App() {
 	return (
 		<Router>
 			<div className="App">
 				<Routes>
-					{/* Routes WITH Layout */}
-					<Route element={<Layout />}>
-						<Route path="/client/dashboard" element={<Dashboard />} />
-						<Route path="/client/admin/dashboard" element={<AdminDashboard />} />
+					{/* General layout routes */}
+					<Route path="/client" element={<ClientLayout />}>
+						<Route path="dashboard" element={<Dashboard />} />
 					</Route>
 
-					{/* Default route fallback */}
+					{/* Admin layout routes */}
+					<Route path="/admin" element={<AdminLayout />}>
+						<Route index element={<Dashboard />} />
+						<Route path="client-view" element={<Dashboard />} />
+						<Route path="create-shortlist" element={<CreateShortlist />} />
+						<Route path="upload-images" element={<UploadImages />} />
+					</Route>
+
+					{/* Default fallback */}
 					<Route path="*" element={<Landing />} />
-\				</Routes>
+				</Routes>
 			</div>
 		</Router>
 	);

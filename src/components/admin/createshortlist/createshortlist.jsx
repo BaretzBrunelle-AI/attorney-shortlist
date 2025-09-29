@@ -5,7 +5,7 @@ import api from "../../../config/axios_config.jsx";
 import "./createshortlist.css";
 
 const CreateShortlist = () => {
-    const { selectedProject } = useOutletContext() || {};
+    const { refresh, setSelectedProject } = useOutletContext() || {};
     const [projectTitle, setProjectTitle] = useState("");
     const [headerTitle, setHeaderTitle] = useState("");
     const [headerSubtitle, setHeaderSubtitle] = useState("");
@@ -32,6 +32,8 @@ const CreateShortlist = () => {
                 headers: { "Content-Type": "multipart/form-data" },
                 admin: true,
             });
+            await refresh?.();
+
             setMessage(res.data || "Upload successful");
             setProjectTitle("");
             setHeaderTitle("");

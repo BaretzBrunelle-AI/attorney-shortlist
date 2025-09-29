@@ -10,6 +10,7 @@ const UploadImages = () => {
 		attorneys = [],
 		availableProjects = [],
 		setMissingImages,
+		refresh
 	} = useOutletContext() || {};
 
 	// console.log("ATTORNEYS ON LOAD AFTER PROJECT SELECTION", attorneys);
@@ -36,6 +37,25 @@ const UploadImages = () => {
 	const filenameBase = (name) => (name || "").replace(/\.[^.]+$/i, "");
 
 	const getName = (obj) => (typeof obj?.name === "string" ? obj.name.trim() : "");
+
+	const pruneUploaded = useCallback((okIds, delay = 0) => {
+		if (!okIds?.length) return;
+		const ok = new Set(okIds.map(String));
+
+		const doPrune = () => {
+			setSingleUploads(prev => {
+				const next = { ...prev };
+				okIds.forEach(id => delete next[id]);
+				return next;
+			});
+
+			setRows(prev => prev.filter(r => !ok.has(String(r.attorney_id))));
+
+			setSelectedAttorneys(prev => prev.filter(a => !ok.has(String(a.attorney_id))));
+		};
+
+		delay ? setTimeout(doPrune, delay) : doPrune();
+	}, [setRows, setSingleUploads, setSelectedAttorneys]);
 
 	const fetchMissingForProject = async (projectName) => {
 		if (!projectName) {
@@ -323,8 +343,16 @@ const UploadImages = () => {
 				});
 			}
 
+			const okIds = results.flatMap((r, i) =>
+				(r?.status === "uploaded" || r?.status === "skipped_existing")
+					? [metas[i].attorney_id]
+					: []
+			);
+
 			setProgress({ done: filtered.length, total: filtered.length });
 			setStatusMsg("batch upload finished");
+
+			pruneUploaded(okIds, 800);
 		} catch (err) {
 			console.error("batch upload failed:", err?.response?.data || err.message);
 			setRows(prev => {
@@ -337,6 +365,7 @@ const UploadImages = () => {
 			setStatusMsg("upload failed");
 		} finally {
 			setIsUploading(false);
+			await refresh?.();
 		}
 	};
 
@@ -354,11 +383,13 @@ const UploadImages = () => {
 				admin: true,
 			});
 			setStatusMsg("upload successful");
+			pruneUploaded([attorneyId], 700);
 		} catch (err) {
 			console.error(err);
 			setStatusMsg("upload failed: " + (err?.response?.data || "server error"));
 		} finally {
 			setIsUploading(false);
+			await refresh?.();
 		}
 	};
 

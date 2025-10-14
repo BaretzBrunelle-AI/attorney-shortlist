@@ -1,17 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import api from "../../../config/axios_config.jsx";
-
-import "./createshortlist.css";
+import styles from "./CreateShortlist.module.css";
 
 const CreateShortlist = () => {
     const { refresh, setSelectedProject } = useOutletContext() || {};
     const [projectTitle, setProjectTitle] = useState("");
     const [headerTitle, setHeaderTitle] = useState("");
     const [headerSubtitle, setHeaderSubtitle] = useState("");
-    const [file, setFile] = useState(null);
-    const [message, setMessage] = useState("");
     const [usesVS, setUsesVS] = useState(false);
+
+    const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const [message, setMessage] = useState("");
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -28,18 +30,21 @@ const CreateShortlist = () => {
         formData.append("uses_vs", String(usesVS));
 
         try {
-            const res = await api.post("/admin/upload-attorneys", formData, {
+            const res = await api.post("/admin/shortlist/create-shortlist", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
                 admin: true,
             });
+
             await refresh?.();
+            setSelectedProject?.(projectTitle);
 
             setMessage(res.data || "Upload successful");
             setProjectTitle("");
             setHeaderTitle("");
             setHeaderSubtitle("");
-            setUsesVS("");
+            setUsesVS(false);
             setFile(null);
+            if (fileInputRef.current) fileInputRef.current.value = "";
         } catch (err) {
             console.error(err);
             setMessage("Failed to upload: " + (err?.response?.data || "Server error"));
@@ -47,15 +52,15 @@ const CreateShortlist = () => {
     };
 
     return (
-        <div className="create-shortlist-main-container">
-            <div className="upload-new-shortlist-container">
-                <div className="section-title">Upload New Shortlist Project</div>
+        <div className={styles.page}>
+            <div className={styles.card}>
+                <div className={styles.sectionTitle}>Upload New Shortlist Project</div>
 
-                <form onSubmit={handleUpload} className="admin-upload-attorney-forms">
+                <form onSubmit={handleUpload} className={styles.form}>
                     <label>
                         Project Title:
                         <input
-                            id="project-name-input-field"
+                            className={styles.textInput}
                             type="text"
                             placeholder="Enter Project Name"
                             value={projectTitle}
@@ -63,14 +68,17 @@ const CreateShortlist = () => {
                             required
                         />
                     </label>
-                    <div className="upload-input-message">
-                        Note: Project title is case sensitive<br />Used for limiting user access to specified project
+
+                    <div className={styles.helper}>
+                        Note: Project title is case sensitive.
+                        <br />
+                        Used for limiting user access to the specified project.
                     </div>
 
                     <label>
                         Header Title:
                         <input
-                            id="project-header-title-input-field"
+                            className={styles.textInput}
                             type="text"
                             placeholder="Enter Header Title"
                             value={headerTitle}
@@ -81,20 +89,22 @@ const CreateShortlist = () => {
                     <label>
                         Header Subtitle:
                         <input
-                            id="project-header-subtitle-input-field"
+                            className={styles.textInput}
                             type="text"
                             placeholder="Enter Header Subtitle"
                             value={headerSubtitle}
                             onChange={(e) => setHeaderSubtitle(e.target.value)}
                         />
                     </label>
-                    <div className="upload-input-message">
-                        Note: Header title and subtitle will display on PDF header
+
+                    <div className={styles.helper}>
+                        Note: Header title and subtitle will display on the PDF header.
                     </div>
 
-                    <div className="visibility-score-fieldset">
-                        <div className="fieldset-label">Visibility Score</div>
-                        <label id="visibility-score-option">
+                    <div className={styles.fieldset}>
+                        <div className={styles.fieldsetLabel}>Visibility Score</div>
+
+                        <label className={styles.radioOption}>
                             <input
                                 type="radio"
                                 name="uses_vs"
@@ -104,7 +114,8 @@ const CreateShortlist = () => {
                             />
                             No visibility score (default)
                         </label>
-                        <label id="visibility-score-option">
+
+                        <label className={styles.radioOption}>
                             <input
                                 type="radio"
                                 name="uses_vs"
@@ -114,11 +125,14 @@ const CreateShortlist = () => {
                             />
                             Show visibility score
                         </label>
-                        <div className="helper-text">
-                            {(usesVS || false ) ? (
-                                <>Make sure your CSV includes a "<code>visibility_score</code>" column.</>
+
+                        <div className={styles.helper}>
+                            {usesVS ? (
+                                <>
+                                    Make sure your CSV includes a <code>visibility_score</code> column.
+                                </>
                             ) : (
-                                <>NOT USING VISIBILITY SCORE</>
+                                <>Not using visibility score.</>
                             )}
                         </div>
                     </div>
@@ -126,17 +140,21 @@ const CreateShortlist = () => {
                     <label>
                         CSV File:
                         <input
-                            id="attorney-file-input-field"
+                            ref={fileInputRef}
+                            className={`${styles.textInput} ${styles.fileInput}`}
                             type="file"
                             accept=".csv"
-                            onChange={(e) => setFile(e.target.files[0])}
+                            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                             required
                         />
                     </label>
 
-                    <button id="upload-submit-button" type="submit">Upload</button>
+                    <button className={styles.primaryBtn} type="submit">
+                        Upload
+                    </button>
                 </form>
-                {message && <div className="upload-status">{message}</div>}
+
+                <div className={styles.status}>{message}</div>
             </div>
         </div>
     );

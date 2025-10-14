@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import api from "../../../config/axios_config.jsx";
-
-import "./downloadshortlist.css";
+import styles from "./DownloadShortlist.module.css";
 
 const DownloadShortlist = ({ selectedProject }) => {
 	const [downloading, setDownloading] = useState(false);
@@ -52,32 +51,37 @@ const DownloadShortlist = ({ selectedProject }) => {
 	};
 
 	return (
-		<div className="download-shortlist-container">
-			<div className="page-number-inputs">
+		<div className={styles.container}>
+			<div className={styles.pageNumberInputs}>
 				<label>
 					Marquee Start:
 					<input
+						className={styles.pageNumInput}
 						type="text"
 						value={marqueeStart}
-						onChange={(e) => setMarqueeStart(parseInt(e.target.value))}
+						onChange={(e) => setMarqueeStart(e.target.value)}
 						placeholder="No Page Numbers"
 					/>
 				</label>
+
 				<label>
 					First Class Start:
 					<input
+						className={styles.pageNumInput}
 						type="text"
 						value={firstClassStart}
-						onChange={(e) => setFirstClassStart(parseInt(e.target.value))}
+						onChange={(e) => setFirstClassStart(e.target.value)}
 						placeholder="No Page Numbers"
 					/>
 				</label>
+
 				<label>
 					Wildcard Start:
 					<input
+						className={styles.pageNumInput}
 						type="text"
 						value={wildcardStart}
-						onChange={(e) => setWildcardStart(parseInt(e.target.value))}
+						onChange={(e) => setWildcardStart(e.target.value)}
 						placeholder="No Page Numbers"
 					/>
 				</label>
@@ -85,11 +89,11 @@ const DownloadShortlist = ({ selectedProject }) => {
 
 			<button
 				type="button"
-				className="download-shortlist-button"
+				className={styles.downloadButton}
 				onClick={handleDownloadShortlist}
 				disabled={!selectedProject || downloading}
 			>
-				{downloading ? <span className="spinner" aria-hidden="true" /> : "Download Project Shortlist"}
+				{downloading ? <span className={styles.spinner} aria-hidden="true" /> : "Download Project Shortlist"}
 			</button>
 		</div>
 	);

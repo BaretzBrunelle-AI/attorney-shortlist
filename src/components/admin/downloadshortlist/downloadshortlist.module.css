@@ -1,0 +1,83 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 10px;
+}
+
+.pageNumberInputs {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 12px;
+	justify-content: center;
+}
+
+.pageNumberInputs label {
+	font-size: 13px;
+	font-weight: 600;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	color: #ffffff;
+}
+
+/* Input field styling */
+.pageNumInput {
+	flex: 1;
+	max-width: 125px;
+	padding: 6px 8px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	background: #ffffff;
+	color: #000000;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.pageNumInput:focus {
+	outline: 2px solid var(--silver-lake-blue, #5b89bb);
+	outline-offset: 1px;
+}
+
+/* Button */
+.downloadButton {
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+	background-color: #223156; /* matches dark sidebar controls */
+	border: 1px solid #334155;
+	border-radius: 10px;
+	color: #e2e8f0;
+	cursor: pointer;
+	font-weight: 700;
+	font-size: 14px;
+	transition: background-color 0.15s ease, filter 0.15s ease;
+}
+
+.downloadButton:hover:not(:disabled) {
+	background-color: #2d3c63;
+}
+
+.downloadButton:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+	width: 16px;
+	height: 16px;
+	border: 2px solid color-mix(in srgb, #ffffff 35%, transparent);
+	border-top-color: #ffffff;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}

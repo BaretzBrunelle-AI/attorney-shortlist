@@ -21,7 +21,7 @@ const Dashboard = () => {
             const type = await getValue("user_type");
 
             if (!type) {
-                navigate("/landing", { replace: true });
+                navigate("/#/landing", { replace: true });
                 return;
             }
 
@@ -30,14 +30,14 @@ const Dashboard = () => {
                 if (!okAdmin) {
                     const okUser = await verifyToken(false);
                     if (!okUser) {
-                        navigate("/landing", { replace: true });
+                        navigate("/#/landing", { replace: true });
                         return;
                     }
                 }
             } else {
                 const okUser = await verifyToken(false);
                 if (!okUser) {
-                    navigate("/landing", { replace: true });
+                    navigate("/#/landing", { replace: true });
                     return;
                 }
             }

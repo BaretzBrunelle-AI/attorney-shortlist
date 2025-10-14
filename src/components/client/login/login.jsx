@@ -25,7 +25,7 @@ const UserLogin = () => {
 			const ok = await verifyToken(false);
 			if (ok) {
 				await saveValue("user_type", "user");
-				navigate("/client/dashboard");
+				navigate("/#/client/dashboard");
 			} else {
 				await deleteToken();
 				setMsg("Invalid token. Please try again.");

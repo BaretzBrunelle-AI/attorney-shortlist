@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Navigate } from "react-router-dom";
 
 import NavBar from "../navbar/navbar.jsx";
 import { getValue, verifyToken } from "../../../config/reusable_config.jsx";
@@ -22,9 +22,13 @@ const ClientLayout = () => {
 	}, []);
 
 	if (!checkedAdmin) return null;
-	if (!isAdminVerified && location.pathname.startsWith("/admin")) {
-		window.location.href = "/admin/login";
-		return null;
+
+	// With HashRouter, useLocation().pathname is "/admin/..."
+	const isAdminRoute = location.pathname.startsWith("/admin");
+	const isAdminLogin = location.pathname === "/admin/login";
+
+	if (isAdminRoute && !isAdminLogin && !isAdminVerified) {
+		return <Navigate to="/admin/login" replace />;
 	}
 
 	return (

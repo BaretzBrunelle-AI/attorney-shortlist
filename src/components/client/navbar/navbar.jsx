@@ -20,7 +20,7 @@ const Navbar = () => {
                 />
             </div>
 
-            <h2 id="navbar-title" onClick={() => navigate("/client/dashboard")}>
+            <h2 id="navbar-title" onClick={() => navigate("/#/client/dashboard")}>
                 Attorney Shortlist
             </h2>
         </div>

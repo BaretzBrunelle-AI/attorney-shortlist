@@ -1,14 +1,20 @@
 .navbar-main-container {
-    height: 3.5em;
+    height: 5em;
     width: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.5), #223244);
+    background: 
+        radial-gradient(1200px 600px at 10% -10%, rgba(14, 165, 233, 0.12), transparent 60%),
+		radial-gradient(900px 500px at 110% 10%, rgba(79, 70, 229, 0.15), transparent 60%),
+		linear-gradient(180deg, #0f172a 0%, #111827 100%);
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 20px;
+    border-bottom: 1px solid #223244ff;
     box-shadow: 1px;
     position: sticky;
     z-index: 1000;
+    margin: 0;
+    justify-content: space-between;
 }
 
 .navbar-header-image-container {
@@ -18,12 +24,14 @@
 }
 
 .navbar-header-image {
-    max-width: 200px;
-    margin: 5px;
+    max-width: 425px;
+    margin: 0;
     overflow: hidden;
     align-self: center;
 }
 
 #navbar-title {
     color: #f4f5f5;
+    font-size: 3em;
+    margin-right: 25px;
 }

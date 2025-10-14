@@ -111,7 +111,7 @@ const AdminLayout = () => {
 
 	return (
 		<div className="admin-dashboard-layout">
-			<Navbar />
+			<Navbar projectName={selectedProject}/>
 			<div className="admin-dashboard-body">
 				<Sidebar
 					selectedProject={selectedProject}

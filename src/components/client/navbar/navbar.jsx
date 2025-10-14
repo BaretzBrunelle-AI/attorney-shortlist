@@ -7,7 +7,7 @@ import "./navbar.css";
 // Images
 import header from "../../../assets/header.jpg";
 
-const Navbar = () => {
+const Navbar = ({ projectName }) => {
     const navigate = useNavigate();
 
     return (
@@ -20,9 +20,9 @@ const Navbar = () => {
                 />
             </div>
 
-            <h2 id="navbar-title" onClick={() => navigate("/#/client/dashboard")}>
-                Attorney Shortlist
-            </h2>
+            <h1 id="navbar-title" onClick={() => navigate("/client/dashboard")}>
+                {projectName}
+            </h1>
         </div>
     );
 };

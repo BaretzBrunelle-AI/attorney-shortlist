@@ -1,30 +1,92 @@
 :root {
-  font-family: "EB Garamond", Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+	font-family: "Satoshi", "EB Garamond", Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 
-  --prussian-blue: #223244ff;
-  --silver-lake-blue: #5b89bbff;
-  --blue-gray: #6497ceff;
-  --powder-blue: #91accaff;
-  --paynes-gray: #556e8bff;
-  --slate-gray: #7e8da0ff;
-  --davys-gray: #53555bff;
-  --onyx: #3b3c40ff;
-  --white-smoke: #f4f5f5ff;
-  --timberwolf: #d5d5d7ff;
+	--prussian-blue: #223244ff;
+	--silver-lake-blue: #5b89bbff;
+	--blue-gray: #6497ceff;
+	--powder-blue: #91accaff;
+	--paynes-gray: #556e8bff;
+	--slate-gray: #7e8da0ff;
+	--davys-gray: #53555bff;
+	--onyx: #3b3c40ff;
+	--white-smoke: #f4f5f5ff;
+	--timberwolf: #d5d5d7ff;
+
+	--card-bg: #ffffff;
+	--card-border: #e7eaf0;
+	--card-radius: 12px;
+	--shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+
+	--text: #111827;
+	--muted: #6b7280;
+
+	--primary: #0f62fe;
+	--primary-700: #0b48b6;
+	--danger: #b3261e;
+
+	--green-indicator: rgb(98, 232, 98);
+
+	--line: #eef2f7;
 }
 
 body {
-  width: 100%;
-  margin: 0px;
+	width: 100%;
+	margin: 0px;
+}
+
+/**
+* @license
+*
+* Font Family: Satoshi
+* Designed by: Deni Anggara
+* URL: https://www.fontshare.com/fonts/satoshi
+* © 2025 Indian Type Foundry
+*
+* Satoshi Light 
+* Satoshi LightItalic 
+* Satoshi Regular 
+* Satoshi Italic 
+* Satoshi Medium 
+* Satoshi MediumItalic 
+* Satoshi Bold 
+* Satoshi BoldItalic 
+* Satoshi Black 
+* Satoshi BlackItalic 
+* Satoshi Variable (Variable font)
+* Satoshi VariableItalic (Variable font)
+
+*
+*/
+
+/* Satoshi Variable (Normal) */
+@font-face {
+	font-family: "Satoshi";
+	src: url("./assets/fonts/Satoshi/Satoshi-Variable.woff2") format("woff2");
+	font-weight: 500 1200;
+	font-style: normal;
+	font-display: swap;
+	font-synthesis-weight: none;
+	font-synthesis-style: none;
+}
+
+/* Satoshi Variable (Italic) */
+@font-face {
+	font-family: "Satoshi";
+	src: url("./assets/fonts/Satoshi/Satoshi-VariableItalic.woff2") format("woff2");
+	font-weight: 300 1200;
+	font-style: italic;
+	font-display: swap;
+	font-synthesis-weight: none;
+	font-synthesis-style: none;
 }

@@ -144,14 +144,17 @@
 }
 
 .tags-main-container {
-    max-height: 20px;
+    max-height: fit-content;
+    max-width: 400px;
+    flex-wrap: wrap;
     display: flex;
     flex-direction: row;
-    text-wrap: wrap;
     overflow: hidden;
+    text-wrap: wrap;
     gap: 5px;
     align-items: center;
     justify-content: flex-start;
+    overflow-wrap: anywhere;
     width: 100%;
 }
 

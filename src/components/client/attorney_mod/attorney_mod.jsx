@@ -29,7 +29,7 @@ const AttorneyModule = ({
 
     const [showAllTags, setShowAllTags] = useState(false);
 
-    const displayedTags = showAllTags ? tags : tags.slice(0, 5);
+    const displayedTags = showAllTags ? tags : tags.slice(0, 4);
     const remainingCount = tags.length - 5;
 
     const toggleTags = () => {

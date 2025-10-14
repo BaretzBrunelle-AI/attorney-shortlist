@@ -24,7 +24,7 @@ const Sidebar = ({ selectedProject, setSelectedProject, availableProjects = [] }
 
     const handleLogout = () => {
         try { localStorage.clear(); } catch { }
-        navigate("/landing", { replace: true });
+        navigate("/#/landing", { replace: true });
     };
 
     return (

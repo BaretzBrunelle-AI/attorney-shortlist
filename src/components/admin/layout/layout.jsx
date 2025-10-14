@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Navigate } from "react-router-dom";
 
 import Navbar from "../../client/navbar/navbar.jsx";
 import Sidebar from "../sidebar/sidebar.jsx";
@@ -65,7 +65,6 @@ const AdminLayout = () => {
 		[]
 	);
 
-	// Helper
 	const refreshSidebarData = useCallback(
 		async (projectName = selectedProject) => {
 			const projects = await fetchProjects();
@@ -86,19 +85,28 @@ const AdminLayout = () => {
 		}
 	}, [fetchProjects, fetchAttorneysForProject, selectedProject]);
 
+	// Kick off loads only *after* auth is checked & verified
 	useEffect(() => {
-		fetchProjects();
-	}, [fetchProjects]);
+		if (checkedAdmin && isAdminVerified) {
+			fetchProjects();
+		}
+	}, [checkedAdmin, isAdminVerified, fetchProjects]);
 
 	useEffect(() => {
-		if (selectedProject) fetchAttorneysForProject(selectedProject);
-		else setAttorneys([]);
-	}, [selectedProject, fetchAttorneysForProject]);
+		if (checkedAdmin && isAdminVerified) {
+			if (selectedProject) fetchAttorneysForProject(selectedProject);
+			else setAttorneys([]);
+		}
+	}, [checkedAdmin, isAdminVerified, selectedProject, fetchAttorneysForProject]);
 
 	if (!checkedAdmin) return null;
-	if (!isAdminVerified && location.pathname.startsWith("/admin")) {
-		window.location.href = "/admin/login";
-		return null;
+
+	// HashRouter: pathname is "/admin/..."
+	const isAdminRoute = location.pathname.startsWith("/admin");
+	const isLoginRoute = location.pathname === "/admin/login";
+
+	if (isAdminRoute && !isLoginRoute && !isAdminVerified) {
+		return <Navigate to="/admin/login" replace />;
 	}
 
 	return (
@@ -123,7 +131,7 @@ const AdminLayout = () => {
 							fetchProjects,
 							fetchAttorneysForProject,
 							refreshSidebarData,
-							refresh
+							refresh,
 						}}
 					/>
 				</div>

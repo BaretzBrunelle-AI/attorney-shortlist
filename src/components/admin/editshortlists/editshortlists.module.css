@@ -218,7 +218,7 @@
     border-radius: 12px;
     overflow: auto;
     background: #fff;
-    max-height: clamp(280px, 50vh, 560px);
+    max-height: clamp(320px, 52vh, 560px);
 }
 
 .row {

@@ -1,0 +1,123 @@
+.adminSidebar {
+	--sb-bg: #0f172a;
+	--sb-fg: #e2e8f0;
+	--sb-fg-strong: #ffffff;
+	--sb-muted: #cbd5e1;
+	--sb-border: #334155;
+	--sb-divider: #1f2937;
+	--sb-control-bg: #223156;
+	/* was var(--paynes-gray) */
+	--sb-control-bg-hover: #233055;
+	--sb-control-focus: #64748b;
+
+	order: -1;
+	position: sticky;
+	top: 0;
+	width: 250px;
+	height: 100%;
+	background: var(--sb-bg);
+	color: var(--sb-fg);
+	padding: 16px;
+	gap: 16px;
+	display: flex;
+	flex-direction: column;
+	overflow-y: hidden;
+	margin-block: 0;
+	z-index: 1000;
+}
+
+.section {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.title {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0;
+	color: var(--sb-fg-strong);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	text-align: center;
+}
+
+.label {
+	font-size: 12px;
+	color: var(--sb-muted);
+	text-align: center;
+}
+
+/* Project select */
+.select {
+	width: 100%;
+	padding: 10px 10px;
+	border-radius: 8px;
+	border: 1px solid var(--sb-border);
+	background: var(--sb-control-bg);
+	color: var(--sb-fg);
+	outline: none;
+	font-weight: 700;
+}
+
+.select:focus {
+	border-color: var(--sb-control-focus);
+	box-shadow: 0 0 0 3px color-mix(in sRGB, var(--sb-control-focus) 35%, transparent);
+}
+
+/* Divider */
+.divider {
+	height: 1px;
+	background: var(--sb-divider);
+	margin: 8px 0;
+	border: 0;
+}
+
+/* Section headline (e.g., "Admin Navigation") */
+.sectionTitle {
+	display: inline-block;
+	text-align: center;
+	padding: 0 16px;
+	font-weight: 700;
+	color: var(--sb-fg);
+}
+
+/* Nav buttons */
+.link {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	background-color: var(--sb-control-bg);
+	border: 1px solid var(--sb-border);
+	border-radius: 10px;
+	color: var(--sb-fg);
+	cursor: pointer;
+	font-weight: 700;
+	text-decoration: none;
+	transition: background-color .15s ease, filter .15s ease, opacity .15s ease;
+}
+
+.link:hover {
+	background-color: var(--sb-control-bg-hover);
+	filter: brightness(1.02);
+}
+
+.link:disabled,
+.link[aria-disabled="true"] {
+	background-color: var(--sb-border);
+	cursor: default;
+	opacity: 0.7;
+}
+
+/* Icon inside buttons */
+.icon {
+	filter: invert(1);
+	width: 18px;
+	height: 18px;
+}
+
+/* Logout button tweak (optional) */
+.logout {
+	margin-bottom: 10%;
+}

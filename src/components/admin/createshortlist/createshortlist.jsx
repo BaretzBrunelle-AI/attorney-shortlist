@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import api from "../../../config/axios_config.jsx";
-import styles from "./CreateShortlist.module.css";
+import styles from "./createshortlist.module.css";
 
 const CreateShortlist = () => {
     const { refresh, setSelectedProject } = useOutletContext() || {};

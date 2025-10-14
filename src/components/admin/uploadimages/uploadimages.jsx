@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import api from "../../../config/axios_config.jsx";
-import styles from "./UploadImages.module.css";
+import styles from "./uploadimages.module.css";
 
 const UploadImages = () => {
   const {

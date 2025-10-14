@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../../../config/axios_config.jsx";
-import styles from "./DownloadShortlist.module.css";
+import styles from "./downloadshortlist.module.css";
 
 const DownloadShortlist = ({ selectedProject }) => {
 	const [downloading, setDownloading] = useState(false);

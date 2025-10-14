@@ -7,7 +7,7 @@ import create from "../../../assets/icons/anvil.png";
 import shortlistEdit from "../../../assets/icons/edit.png";
 import attorneyEdit from "../../../assets/icons/user-edit.png";
 
-import styles from "./Sidebar.module.css";
+import styles from "./sidebar.module.css";
 
 const adminNavLinks = [
     { label: "Client View", path: "/admin/client-view", icon: dashboard, aria: "Client View" },

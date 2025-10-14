@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 // css
 import "./attorney_mod.css";
 
@@ -14,6 +14,7 @@ import visibility from "../../../assets/icons/witness.png";
 const AttorneyModule = ({
     name,
     image,
+    image_meta,
     linkedinURL,
     websiteURL,
     jdYear,
@@ -35,32 +36,57 @@ const AttorneyModule = ({
         setShowAllTags(!showAllTags);
     };
 
-    return ( 
+    const Avatar = ({ src, meta, size = 120, className = "" }) => {
+        const m = meta || { offsetX: 0, offsetY: 0, scale: 1 };
+        const offsetX = Number(m.offsetX) || 0;
+        const offsetY = Number(m.offsetY) || 0;
+        const scale = Number(m.scale) || 1;
+
+        return (
+            <div
+                className={`admin-dashboard-avatar-frame ${className}`}
+                style={{ width: size, height: size }}
+                aria-label="Attorney headshot"
+            >
+                {src ? (
+                    <img
+                        src={src}
+                        alt=""
+                        style={{
+                            transform: `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
+                        }}
+                    />
+                ) : null}
+            </div>
+        );
+    };
+
+    return (
         <div className="attorney-module-main-container">
             <div className="basics-main-container">
                 <div className="basics-hemisphere-one">
                     <div className={visibilityScore ? "attorney-image-main-container-with-visibility" : "attorney-image-main-container"}>
-                        <img className="attorney-headshot" alt="attorney-headshot" src={image}/>
+                        <Avatar src={image} meta={image_meta} size={120} />
                     </div>
                     <div className="basics-attorney-name-links">
                         <div className="attorney-name">{name}</div>
                         <div className="attorney-jd-year">JD Year: {jdYear}</div>
                         <div className="attorney-links">
                             {linkedinURL && (
-                                <a 
-                                    className="attorney-linkedin-hyperlink" 
+                                <a
+                                    className="attorney-linkedin-hyperlink"
                                     href={linkedinURL}
-                                    target="_blank" 
+                                    target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     <img className="attorney-linkedin" alt="attorney-linkedin" src={linkedin} />
                                 </a>
                             )}
                             {websiteURL && (
-                                <a 
-                                    className="attorney-website-hyperlink" 
+                                <a
+                                    className="attorney-website-hyperlink"
                                     href={websiteURL}
-                                    target="_blank" 
+                                    target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     <img className="attorney-website" alt="attorney-website" src={worldwideweb} />
@@ -90,9 +116,9 @@ const AttorneyModule = ({
                         <div className="attorney-visibility-score">
                             Visibility Score: {visibilityScore}
                             <img
-                            className="attorney-visibility-icon"
-                            alt="visibility-score-icon"
-                            src={visibility}
+                                className="attorney-visibility-icon"
+                                alt="visibility-score-icon"
+                                src={visibility}
                             />
                         </div>
                     ) : null}
@@ -102,11 +128,11 @@ const AttorneyModule = ({
             <div className="attorney-mod-bottom-container">
                 <div className={showAllTags ? "tags-main-container-reveal" : "tags-main-container"}>
                     {tags &&
-                    [...new Set(displayedTags.map(tag => tag.value))].map((uniqueValue, index) => (
-                        <div key={index} className="attorney-tag">
-                        {uniqueValue}
-                        </div>
-                    ))}
+                        [...new Set(displayedTags.map(tag => tag.value))].map((uniqueValue, index) => (
+                            <div key={index} className="attorney-tag">
+                                {uniqueValue}
+                            </div>
+                        ))}
 
                     {remainingCount > 0 && !showAllTags && (
                         <div className="attorney-tag-toggle" onClick={toggleTags}>

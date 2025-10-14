@@ -84,6 +84,7 @@ const AttorneyWidget = ({ attorneys: attorneysProp }) => {
                     key={index}
                     name={attorney.name}
                     image={attorney.image}
+                    image_meta={attorney.image_meta}
                     linkedinURL={attorney.linkedin}
                     websiteURL={attorney.website}
                     jdYear={attorney.grad_year}

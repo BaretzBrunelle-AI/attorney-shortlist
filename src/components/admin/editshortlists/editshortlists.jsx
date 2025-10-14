@@ -151,7 +151,7 @@ const EditShortlists = () => {
             setLoading(true);
             setStatus("Deleting shortlist...");
             await api.post(
-                "/admin/shortlist/delete",
+                "/admin/shortlist/delete-shortlist",
                 { project_title: selectedProject },
                 { admin: true }
             );

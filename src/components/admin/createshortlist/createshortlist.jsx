@@ -15,10 +15,66 @@ const CreateShortlist = () => {
 
     const [message, setMessage] = useState("");
 
+    // NEW: track title availability state
+    const [titleStatus, setTitleStatus] = useState({ state: "idle", msg: "" });
+    const isChecking = titleStatus.state === "checking";
+    const isTaken = titleStatus.state === "taken";
+    const hasError = titleStatus.state === "error";
+    const canSubmit =
+        !!file &&
+        !!projectTitle.trim() &&
+        !isChecking &&
+        !isTaken &&
+        !hasError;
+
+    const checkTitleAvailability = async () => {
+        const title = projectTitle.trim();
+        if (!title) {
+            setTitleStatus({ state: "idle", msg: "" });
+            return false;
+        }
+        try {
+            setTitleStatus({ state: "checking", msg: "Checking title…" });
+            const { data } = await api.get("/admin/shortlist/check-title", {
+                params: { project_title: title },
+                admin: true,
+            });
+
+            // be tolerant to possible response shapes
+            const exists =
+                data?.exists ?? data?.taken ?? (typeof data === "boolean" ? data : false);
+
+            if (exists) {
+                setTitleStatus({
+                    state: "taken",
+                    msg: "This project title is already in use.",
+                });
+                return false;
+            } else {
+                setTitleStatus({ state: "ok", msg: "Title is available." });
+                return true;
+            }
+        } catch (e) {
+            console.error(e);
+            setTitleStatus({
+                state: "error",
+                msg: "Could not verify title right now.",
+            });
+            return false;
+        }
+    };
+
     const handleUpload = async (e) => {
         e.preventDefault();
         if (!file || !projectTitle) {
             setMessage("Please provide both a project title and a CSV file.");
+            return;
+        }
+
+        // Re-check right before upload
+        const ok = await checkTitleAvailability();
+        if (!ok) {
+            setMessage("Please choose a different project title.");
             return;
         }
 
@@ -44,6 +100,7 @@ const CreateShortlist = () => {
             setHeaderSubtitle("");
             setUsesVS(false);
             setFile(null);
+            setTitleStatus({ state: "idle", msg: "" });
             if (fileInputRef.current) fileInputRef.current.value = "";
         } catch (err) {
             console.error(err);
@@ -60,19 +117,36 @@ const CreateShortlist = () => {
                     <label>
                         Project Title:
                         <input
-                            className={styles.textInput}
+                            className={`${styles.textInput} ${isTaken || hasError ? styles.invalid : ""
+                                }`}
                             type="text"
                             placeholder="Enter Project Name"
                             value={projectTitle}
-                            onChange={(e) => setProjectTitle(e.target.value)}
+                            onChange={(e) => {
+                                setProjectTitle(e.target.value);
+                                // reset status while typing
+                                setTitleStatus({ state: "idle", msg: "" });
+                            }}
+                            onBlur={checkTitleAvailability}
                             required
                         />
                     </label>
 
-                    <div className={styles.helper}>
+                    <div className={styles.helper} aria-live="polite">
                         Note: Project title is case sensitive.
                         <br />
                         Used for limiting user access to the specified project.
+                        {titleStatus.msg ? (
+                            <div
+                                style={{
+                                    marginTop: 6,
+                                    color: isTaken || hasError ? "#ef4444" : "#93c5fd",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                {titleStatus.msg}
+                            </div>
+                        ) : null}
                     </div>
 
                     <label>
@@ -128,9 +202,7 @@ const CreateShortlist = () => {
 
                         <div className={styles.helper}>
                             {usesVS ? (
-                                <>
-                                    Make sure your CSV includes a <code>visibility_score</code> column.
-                                </>
+                                <>Make sure your CSV includes a <code>visibility_score</code> column.</>
                             ) : (
                                 <>Not using visibility score.</>
                             )}
@@ -149,8 +221,8 @@ const CreateShortlist = () => {
                         />
                     </label>
 
-                    <button className={styles.primaryBtn} type="submit">
-                        Upload
+                    <button className={styles.primaryBtn} type="submit" disabled={!canSubmit}>
+                        {isChecking ? "Checking…" : "Upload"}
                     </button>
                 </form>
 

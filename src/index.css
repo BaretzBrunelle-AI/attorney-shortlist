@@ -35,9 +35,16 @@
 	--primary-700: #0b48b6;
 	--danger: #b3261e;
 
-	--green-indicator: rgb(98, 232, 98);
+	--green-indicator: #16a34a;
+	--yellow-indicator: #eab308;
+	--red-indicator: #ef4444;
 
 	--line: #eef2f7;
+
+	--select-arrow-size: 12px;
+	--select-arrow-right: .75rem;
+	--select-arrow-gap: .35rem;
+	--select-arrow-color-hex: 64748b;
 }
 
 body {
@@ -89,4 +96,25 @@ body {
 	font-display: swap;
 	font-synthesis-weight: none;
 	font-synthesis-style: none;
+}
+
+select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+
+  padding-right: calc(var(--select-arrow-right) + var(--select-arrow-size) + 0.75rem) !important;
+
+  background-image: url("./assets/icons/up-down.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: right var(--select-arrow-right) center !important;
+  background-size: var(--select-arrow-size) var(--select-arrow-size) !important;
+}
+
+select::-ms-expand { display: none; }
+
+[dir="rtl"] select {
+  padding-right: .75rem  !important;
+  padding-left: calc(var(--select-arrow-right) + var(--select-arrow-size) + 0.75rem) !important;
+  background-position: left var(--select-arrow-right) center !important;
 }

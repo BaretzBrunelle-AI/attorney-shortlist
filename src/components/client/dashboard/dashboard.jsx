@@ -49,7 +49,7 @@ const Dashboard = () => {
 
     return (
         <div className="shortlist-dashboard-main-container">
-            <AttorneyWidget attorneys={attorneys} />
+            <AttorneyWidget attorneys={attorneys} project={selectedProject}/>
         </div>
     );
 };

@@ -10,6 +10,9 @@ import mail from "../../../assets/icons/mail.png";
 import pin from "../../../assets/icons/pin.png";
 import phone from "../../../assets/icons/phone-call.png";
 import visibility from "../../../assets/icons/witness.png";
+import postit from "../../../assets/icons/post-it.png";
+
+import OutreachNotesBubble from "./outreachbubble";
 
 const AttorneyModule = ({
     name,
@@ -25,6 +28,7 @@ const AttorneyModule = ({
     summary,
     tags,
     visibilityScore,
+    notes
 }) => {
 
     const [showAllTags, setShowAllTags] = useState(false);
@@ -36,10 +40,13 @@ const AttorneyModule = ({
         setShowAllTags(!showAllTags);
     };
 
-    const Avatar = ({ src, meta, size = 120, className = "" }) => {
+    const Avatar = ({ src, meta, size = 60, className = "" }) => {
         const m = meta || { offsetX: 0, offsetY: 0, scale: 1 };
-        const offsetX = Number(m.offsetX) || 0;
-        const offsetY = Number(m.offsetY) || 0;
+        const base = 260;
+        const factor = size / base;
+
+        const dx = (Number(m.offsetX) || 0) * factor;
+        const dy = (Number(m.offsetY) || 0) * factor;
         const scale = Number(m.scale) || 1;
 
         return (
@@ -53,7 +60,7 @@ const AttorneyModule = ({
                         src={src}
                         alt=""
                         style={{
-                            transform: `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
+                            transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(${scale})`,
                         }}
                     />
                 ) : null}
@@ -66,7 +73,7 @@ const AttorneyModule = ({
             <div className="basics-main-container">
                 <div className="basics-hemisphere-one">
                     <div className={visibilityScore ? "attorney-image-main-container-with-visibility" : "attorney-image-main-container"}>
-                        <Avatar src={image} meta={image_meta} size={120} />
+                        <Avatar src={image} meta={image_meta} size={60} />
                     </div>
                     <div className="basics-attorney-name-links">
                         <div className="attorney-name">{name}</div>
@@ -146,6 +153,10 @@ const AttorneyModule = ({
                         </div>
                     )}
                 </div>
+
+                {Array.isArray(notes) && notes.length > 0 && (
+                    <OutreachNotesBubble notes={notes} />
+                )}
             </div>
         </div>
     )

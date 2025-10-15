@@ -12,6 +12,7 @@ import CreateShortlist from "./components/admin/createshortlist/createshortlist.
 import UploadImages from "./components/admin/uploadimages/uploadimages.jsx";
 import EditShortlists from "./components/admin/editshortlists/editshortlists.jsx";
 import EditAttorneys from "./components/admin/editattorneys/editattorneys.jsx";
+import OutreachNotes from "./components/admin/outreachnotes/outreachnotes.jsx";
 
 function App() {
 	return (
@@ -31,6 +32,7 @@ function App() {
 						<Route path="upload-images" element={<UploadImages />} />
 						<Route path="edit-shortlists" element={<EditShortlists />} />
 						<Route path="edit-attorneys" element={<EditAttorneys />} />
+						<Route path="outreach-notes" element={<OutreachNotes />} />
 						{/* <Route path="invite-client" element={<InviteClient />} /> */}
 					</Route>
 

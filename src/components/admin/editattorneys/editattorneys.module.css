@@ -212,6 +212,11 @@
 }
 
 /* Header / Footer */
+#modal-title-select {
+    max-width: 400px;
+    width: 400px;
+}
+
 .modal-header,
 .modal-footer {
     display: flex;
@@ -232,14 +237,22 @@
 }
 
 /* Title + tier select */
+.modal-title-sub-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .modal-title {
+    display: flex;
     font-weight: 700;
     font-size: 16px;
     color: var(--text);
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
 }
 
 .modal-title select {
-    margin-left: 6px;
     padding: 6px 8px;
     border: 1px solid var(--card-border);
     border-radius: 8px;
@@ -537,6 +550,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    justify-content: flex-end;
 }
 
 .zoom-indicator {
@@ -547,8 +561,8 @@
 
 .actions-row {
     display: flex;
-    gap: 8px;
-    justify-content: flex-end;
+    gap: 58px;
+    justify-self: flex-end;
 }
 
 /* Search bar above the list (module-scoped) */

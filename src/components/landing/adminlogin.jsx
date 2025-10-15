@@ -124,7 +124,7 @@ const AdminLogin = () => {
                         {mode === "register" && "Register Admin"}
                     </div>
                     <div className="user-login-subtitle">
-                        {mode === "login" && "Sign in to manage projects and shortlists"}
+                        {mode === "login" && "Sign in to manage projects"}
                         {mode === "invite" &&
                             "Enter your email and the Creation Key to receive a registration code"}
                         {mode === "register" &&

@@ -4,7 +4,7 @@ import api from "../../../config/axios_config.jsx";
 import styles from "./editshortlists.module.css";
 
 const EditShortlists = () => {
-    const { selectedProject, setSelectedProject, availableProjects = [] } =
+    const { selectedProject, setSelectedProject, availableProjects = [], refresh } =
         useOutletContext() || {};
 
     const [status, setStatus] = useState("");
@@ -155,6 +155,8 @@ const EditShortlists = () => {
                 { project_title: selectedProject },
                 { admin: true }
             );
+
+            await refresh?.();
 
             setSelectedProject?.(null);
             setProjectInfo(null);

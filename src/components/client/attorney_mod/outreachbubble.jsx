@@ -103,7 +103,7 @@ const OutreachNotesBubble = ({ notes = [] }) => {
                     </div>
                     <ul className="notes-bubble-list">
                         {notes.map((n, i) => (
-                            <li key={n.note_id || i}>
+                            <li className="notes-bubble-list-item" key={n.note_id || i}>
                                 <div className="note-text">{n.note || "(no text)"}</div>
                                 <div className="note-time">{fmtTime(n.date)}</div>
                             </li>

@@ -32,7 +32,6 @@ const AttorneyWidget = ({ attorneys: attorneysProp, project }) => {
                 params: { project_name: project },
                 admin: true,
             });
-            console.log(data)
             setAvailableTags(data || { tags: [], keys: [], valuesByKey: {} });
         };
         if (project) fetchTags();

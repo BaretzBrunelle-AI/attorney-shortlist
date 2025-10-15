@@ -22,6 +22,7 @@ const OutreachNotes = () => {
         selectedProject,
         setSelectedProject,
         availableProjects,
+        refresh
     } = useOutletContext() || {};
 
     const [projects, setProjects] = useState([]);
@@ -156,6 +157,8 @@ const OutreachNotes = () => {
                 },
                 { admin: true }
             );
+
+            await refresh?.();
 
             const arr = data?.notes_by_attorney?.[active.attorney_id] || [];
             setNotes(arr.map((n) => ({ ...n, _state: "clean" })));

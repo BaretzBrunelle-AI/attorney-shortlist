@@ -1,0 +1,443 @@
+.outreachnotes-page {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.outreachnotes-card {
+    position: static;
+    width: 100%;
+    max-width: 1100px;
+    background: var(--card-bg, var(--davys-gray));
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow, 0 8px 24px rgba(0, 0, 0, .06));
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-title {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.outreachnotes-body {
+    padding: 16px 20px 20px;
+    display: grid;
+    gap: 16px;
+    color: var(--text, #111);
+}
+
+.has-modal .outreachnotes-body {
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+/* Controls */
+.controls-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.inline {
+    color: var(--white-smoke);
+}
+
+.inline select {
+    min-width: 240px;
+    padding: 8px 10px;
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: var(--text, #111);
+}
+
+.searchInput {
+    min-width: 280px;
+    padding: 8px 10px;
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text, #111);
+    font-size: 14px;
+}
+
+.searchInput:focus {
+    outline: 2px solid var(--silver-lake-blue);
+    outline-offset: 2px;
+}
+
+/* List */
+.outreachnotess-list {
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-radius: 12px;
+    overflow: auto;
+    background: #fff;
+    max-height: clamp(320px, 60vh, 560px);
+}
+
+.outreachnotes-row {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr 2fr 1.25fr 0.75fr;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--line, rgba(0, 0, 0, .06));
+    align-items: center;
+    min-width: 860px;
+}
+
+.outreachnotes-row:first-child {
+    border-top: none;
+}
+
+.outreachnotes-row.header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-top: none;
+    font-weight: 700;
+}
+
+.outreachnotes-row:not(.header):hover {
+    background: #fafafa;
+    cursor: pointer;
+}
+
+.attorney-c1,
+.attorney-c2,
+.attorney-c3,
+.attorney-c4,
+.attorney-c5 {
+    text-align: left;
+    word-break: break-word;
+}
+
+.empty {
+    padding: 12px;
+    color: var(--muted, #6b7280);
+    text-align: center;
+}
+
+/* Status bar */
+.status-bar {
+    display: flex;
+    min-height: 24px;
+    font-size: 14px;
+    padding: 8px 12px;
+    background: #f6f7f9;
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-radius: 8px;
+    color: #333;
+    justify-content: center;
+}
+
+/* Buttons */
+.btn {
+    appearance: none;
+    border-radius: 8px;
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 14px;
+    background: #fff;
+    color: var(--text, #111);
+    cursor: pointer;
+    transition: transform .03s ease, filter .15s ease, opacity .15s ease;
+}
+
+.btn:hover {
+    filter: brightness(0.97);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--primary, var(--silver-lake-blue));
+    border-color: var(--primary, var(--silver-lake-blue));
+    color: #fff;
+}
+
+.btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+.spacer {
+    flex: 1;
+}
+
+/* ---------- Modal (centered within admin Dashboard content) ---------- */
+/* Make sure we target the global parent container even from a CSS module */
+:global(.admin-dashboard-content) {
+    position: relative;
+}
+
+:global(.admin-dashboard-content) .modal-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+}
+
+:global(.admin-dashboard-content) .modal-overlay {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.55);
+}
+
+:global(.admin-dashboard-content) .modal {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal {
+    width: min(920px, calc(100% - 32px));
+    min-height: 60%;
+    max-height: calc(90%);
+    overflow: hidden;
+    padding: 14px 16px 16px;
+
+    background: var(--card-bg, #fff);
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-radius: 12px;
+    box-shadow: var(--shadow, 0 8px 24px rgba(0, 0, 0, .06));
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    color: var(--text, #111);
+}
+
+.modal-header {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.modal-header,
+.modal-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+}
+
+.closePopup {
+    margin-right: 20px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    border-bottom: none;
+}
+
+.modal-body {
+    padding: 14px 16px 16px;
+    display: grid;
+    gap: 12px;
+    min-height: 50vh;
+    max-height: 50vh;
+}
+
+/* Person header */
+.person {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.outreachnotes-avatar-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: 1px solid var(--card-border, #e5e7eb);
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .03);
+    max-height: 120px;
+    max-width: 120px;
+}
+
+.outreachnotes-avatar-frame img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    will-change: transform;
+}
+
+.personMeta {
+    color: var(--text, #111);
+}
+
+.personName {
+    font-weight: 700;
+}
+
+.personLine {
+    opacity: .85;
+}
+
+/* ---------- Notes ---------- */
+.notesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.notesTitle {
+    font-weight: 700;
+    color: var(--text, #111);
+}
+
+.notesList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 100%;
+    min-height: 400px;
+    overflow-y: scroll;
+    border-radius: var(--card-radius);
+    border: 1px solid var(--card-border);
+}
+
+/* Note container - visual state only; layout is inside .noteGrid */
+.note {
+    position: relative;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .96);
+    border: 2px solid var(--card-border);
+}
+
+.noteAdd,
+.noteEdit,
+.noteDelete {
+    position: relative;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .96);
+    border: 2px solid transparent;
+}
+
+/* green / yellow / red borders for state */
+.noteAdd {
+    border-color: var(--green-indicator, #16a34a);
+}
+
+.noteEdit {
+    border-color: var(--yellow-indicator, #f59e0b);
+}
+
+.noteDelete {
+    border-color: var(--red-indicator, #ef4444);
+    opacity: .9;
+}
+
+/* 3-column layout inside each note */
+.noteGrid {
+    display: grid;
+    grid-template-columns: 180px 220px 1fr;
+    /* Priority | Date/Time | Note */
+    gap: 12px;
+    align-items: start;
+}
+
+/* Field column: label above control */
+.fieldCol {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.fieldCol label {
+    font-weight: 600;
+    color: var(--text, #111);
+}
+
+/* Inputs */
+.fieldCol input,
+.fieldCol select,
+.fieldCol textarea {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    background: #fff;
+    color: var(--text, #111);
+    font-size: 1rem;
+}
+
+/* Let the note stretch and be comfortable */
+.noteColTextarea {
+    height: 35px !important;
+    max-width: 430px;
+}
+
+/* Responsive stacking */
+@media (max-width: 860px) {
+    .noteGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Delete “X” button */
+.noteDeleteBtn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    line-height: 28px;
+    text-align: center;
+    background: #dc2626;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Decorative cross lines */
+.closeSpanTop,
+.closeSpanBottom {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: #fff;
+
+    margin: 3px 0;
+
+    transition-property: transform, opacity, width;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+}
+
+.closeSpanTop {
+    transform: translateX(-2px) translateY(3px) rotate(45deg);
+}
+
+.closeSpanBottom {
+    transform: translateX(-2px) translateY(-2px) rotate(-45deg);
+}

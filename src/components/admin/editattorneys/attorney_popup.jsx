@@ -1,10 +1,12 @@
 import React from "react";
 import styles from "./editattorneys.module.css";
 
-const Avatar = ({ src, meta, size = 100, className }) => {
+const Avatar = ({ src, meta, size = 130, className }) => {
     const m = meta || { offsetX: 0, offsetY: 0, scale: 1 };
-    const offsetX = Number(m.offsetX) || 0;
-    const offsetY = Number(m.offsetY) || 0;
+    const base = 260;
+    const factor = size / base;
+    const offsetX = (Number(m.offsetX) || 0)  * factor;
+    const offsetY = (Number(m.offsetY) || 0)  * factor;
     const scale = Number(m.scale) || 1;
 
     return (
@@ -123,7 +125,6 @@ const AttorneyPopup = ({
                             <Avatar
                                 src={draft.image}
                                 meta={draft.image_meta}
-                                size={100}
                                 className={!isNew && imageEdited ? styles.hasEdit : undefined}
                             />
                         </div>
@@ -186,7 +187,7 @@ const AttorneyPopup = ({
 
                 <div className={styles["modal-body"]}>
                     <div className={`${styles.field} ${idCheck.state === "taken" ? styles.invalid : ""}`}>
-                        <label>Attorney ID</label>
+                        <label>Attorney ID: </label>
                         <input
                             type="text"
                             value={draft?.attorney_id || ""}
@@ -194,8 +195,11 @@ const AttorneyPopup = ({
                             className={!isNew && changed?.("attorney_id") ? styles.hasEdit : undefined}
                         />
                         {idCheck.state === "checking" && <span className={styles.helper}>Checking…</span>}
-                        {idCheck.state === "taken" && (
+                        {
+                        idCheck.state === "taken" ? (
                             <span className={`${styles.helper} ${styles.error}`}>{idCheck.msg}</span>
+                        ) : (
+                            <code className={`${styles.helper} ${styles.error}`}>MUST BE UNQIUE, USE SPARINGLY</code>
                         )}
                     </div>
 

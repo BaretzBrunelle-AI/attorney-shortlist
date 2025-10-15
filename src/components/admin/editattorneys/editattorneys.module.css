@@ -45,7 +45,12 @@
     gap: 12px;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.eaSelect {
+    max-width: 450px;
 }
 
 .inline select {
@@ -324,7 +329,7 @@
 }
 
 .field.invalid input {
-    border-color: #ef4444;
+    border-color: var(--red-indicator);
     box-shadow: 0 0 0 3px rgba(239, 68, 68, .12);
 }
 
@@ -335,8 +340,9 @@
 }
 
 .helper.error {
-    color: #b3261e;
+    color: var(--red-indicator);
     font-weight: 600;
+    padding-left: 5px;
 }
 
 /* Image controls */
@@ -357,7 +363,7 @@
     background-color: #f9fafb;
     padding: 10px;
     border-radius: 20px;
-    border: 1px solid var(--card-border)
+    border: 1px solid var(--card-border);
 }
 
 .image-field .thumb {
@@ -566,26 +572,70 @@
 }
 
 /* Search bar above the list (module-scoped) */
-.searchRow {
+.eaSearchRow {
     display: flex;
     gap: 8px;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 4px;
 }
 
-.searchInput {
+.eaSearchInput {
     min-width: 280px;
     padding: 8px 10px;
-    border: 1px solid var(--card-border);
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
     border-radius: 8px;
     background: #fff;
-    color: var(--text);
+    color: var(--text, #111);
     font-size: 14px;
 }
 
-.searchInput:focus {
+.eaSearchInput:focus {
     outline: 2px solid var(--silver-lake-blue);
     outline-offset: 2px;
+}
+
+.eaBtn {
+    appearance: none;
+    border-radius: 8px;
+    border: 1px solid var(--card-border, rgba(0, 0, 0, .08));
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 14px;
+    background: #fff;
+    color: var(--text, #111);
+    cursor: pointer;
+    transition: transform .03s ease, filter .15s ease, opacity .15s ease;
+}
+
+.eaBtn:hover {
+    filter: brightness(0.97);
+}
+
+.eaBtn:active {
+    transform: translateY(1px);
+}
+
+.eaBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.eaBtnPrimary {
+    background: var(--primary, var(--silver-lake-blue));
+    border-color: var(--primary, var(--silver-lake-blue));
+    color: #fff;
+}
+
+.eaBtnPrimary:hover {
+    filter: brightness(0.95);
+}
+
+.eaSpacer {
+    flex: 1;
+    min-width: 12px;
+    /* keeps layout nice when wrapping */
 }
 
 /* Header cell interactions */
@@ -598,9 +648,14 @@
     filter: brightness(0.96);
 }
 
+.invalid .hasEdit {
+    border-color: var(--red-indicator);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, .12);
+}
+
 .hasEdit,
 :global(.has-edit) {
-    border-color: var(--green-indicator) !important;
+    border-color: var(--yellow-indicator) !important;
     /* subtle glow to make it obvious */
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--silver-lake-blue) 35%, transparent);
 }
@@ -608,14 +663,14 @@
 /* Headshot: bump border to 2px when edited */
 .thumb.hasEdit,
 :global(img.has-edit) {
-    border: 2px solid var(--green-indicator) !important;
+    border: 2px solid var(--yellow-indicator) !important;
 }
 
 /* If you want selects to pop the same way */
 select.hasEdit,
 :global(select.has-edit) {
-    border-color: var(--green-indicator) !important;
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--green-indicator) 35%, transparent);
+    border-color: var(--yellow-indicator) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--yellow-indicator) 35%, transparent);
 }
 
 .avatarThumb {

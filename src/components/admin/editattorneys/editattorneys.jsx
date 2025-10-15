@@ -1,4 +1,3 @@
-// components/admin/editattorneys/EditAttorneys.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import api from "../../../config/axios_config.jsx";
@@ -71,15 +70,9 @@ const EditAttorneys = () => {
                 setLoading(true);
                 const { data } = await api.get("/admin/shortlist/get-projects", { admin: true });
 
-                const names = Array.isArray(data?.projects)
-                    ? data.projects.map((p) => (typeof p === "string" ? p : p?.project_name)).filter(Boolean)
-                    : [];
+                const list = Array.isArray(data?.projects) ? data.projects : [];
 
-                const uniqSorted = Array.from(new Set(names)).sort((a, b) =>
-                    a.localeCompare(b, undefined, { sensitivity: "base" })
-                );
-
-                setProjects(uniqSorted);
+                setProjects(list);
                 setStatus("");
             } catch (e) {
                 console.error(e);
@@ -587,12 +580,12 @@ const EditAttorneys = () => {
 
     const canSave = !!draft && (idCheck.state === "idle" || idCheck.state === "ok") && !loading;
 
-    // ---------- Sorting + Search helpers ----------
+    // ---------- Sorting + Search (match Outreach Notes search behavior) ----------
     const tierWeight = (t) => {
         const s = (t || "").toLowerCase();
         if (s === "marquee") return 0;
         if (s === "first class") return 1;
-        if (s === "wildcard") return 2;
+        if (s === "wildcard" || s === "wild card") return 2;
         return 3;
     };
 
@@ -603,22 +596,16 @@ const EditAttorneys = () => {
 
     const caret = (key) => (sort.key === key ? (sort.dir === "asc" ? " ▲" : " ▼") : " ↕");
 
-    const nameScore = (q, name) => {
-        const needle = (q || "").trim().toLowerCase();
-        const hay = (name || "").toLowerCase();
-        if (!needle) return 0;
-        if (hay === needle) return 1000;
-        if (hay.startsWith(needle)) return 800;
-        const idx = hay.indexOf(needle);
-        if (idx !== -1) return 600 - idx;
-        let overlap = 0;
-        for (const ch of new Set(needle)) if (hay.includes(ch)) overlap++;
-        return overlap;
-    };
+    // 1) Simple name-contains filter (same as Outreach Notes)
+    const filtered = useMemo(() => {
+        const q = (query || "").trim().toLowerCase();
+        if (!q) return list;
+        return list.filter((a) => (a.name || "").toLowerCase().includes(q));
+    }, [list, query]);
 
-    const sortedList = useMemo(() => {
-        const withIdx = list.map((item, i) => ({ ...item, __i: i }));
-
+    // 2) Apply sorting after filtering
+    const displayList = useMemo(() => {
+        const withIdx = filtered.map((item, i) => ({ ...item, __i: i }));
         if (sort.key) {
             const dir = sort.dir === "asc" ? 1 : -1;
             withIdx.sort((a, b) => {
@@ -637,26 +624,8 @@ const EditAttorneys = () => {
                 return 0;
             });
         }
-
-        const q = query.trim();
-        if (q) {
-            let bestIdx = -1;
-            let best = -Infinity;
-            for (let i = 0; i < withIdx.length; i++) {
-                const s = nameScore(q, withIdx[i].name);
-                if (s > best) {
-                    best = s;
-                    bestIdx = i;
-                }
-            }
-            if (bestIdx > 0) {
-                const [bestItem] = withIdx.splice(bestIdx, 1);
-                withIdx.unshift(bestItem);
-            }
-        }
-
         return withIdx;
-    }, [list, sort, query]);
+    }, [filtered, sort]);
 
     const imageEdited = imageChanged() || imageMetaChanged();
 
@@ -675,6 +644,7 @@ const EditAttorneys = () => {
                             <select
                                 value={selectedProject || ""}
                                 onChange={(e) => setSelectedProject?.(e.target.value || null)}
+                                className={styles.eaSelect}
                             >
                                 <option value="">Select Project</option>
                                 {projects.map((p) => (
@@ -684,29 +654,39 @@ const EditAttorneys = () => {
                                 ))}
                             </select>
                         </label>
-                    </div>
 
-                    {/* Search row + NEW button */}
-                    <div className={styles.searchRow}>
-                        <input
-                            type="text"
-                            placeholder="Search by name…"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            className={styles.searchInput}
-                        />
-                        <button className={styles.btn} onClick={() => setQuery("")} disabled={!query}>
-                            Clear
-                        </button>
-                        <button
-                            className={`${styles.btn} ${styles["btn-primary"]}`}
-                            onClick={openCreate}
-                            disabled={!selectedProject}
-                            title={selectedProject ? "Create a new attorney in this project" : "Select a project first"}
-                            style={{ marginLeft: 8 }}
-                        >
-                            + New Attorney
-                        </button>
+                        {/* Search row + NEW button (matches Outreach Notes look/behavior) */}
+                        <div className={styles.eaSearchRow}>
+                            <input
+                                type="text"
+                                placeholder="Search by name…"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                className={styles.eaSearchInput}
+                            />
+                            <button
+                                className={styles.eaBtn}
+                                onClick={() => setQuery("")}
+                                disabled={!query}
+                            >
+                                Clear
+                            </button>
+
+                            <div className={styles.eaSpacer} />
+
+                            <button
+                                className={`${styles.eaBtn} ${styles.eaBtnPrimary}`}
+                                onClick={openCreate}
+                                disabled={!selectedProject}
+                                title={
+                                    selectedProject
+                                        ? "Create a new attorney in this project"
+                                        : "Select a project first"
+                                }
+                            >
+                                + Add Attorney
+                            </button>
+                        </div>
                     </div>
 
                     <div className={styles["edit-att-attorneys-list"]}>
@@ -742,11 +722,11 @@ const EditAttorneys = () => {
                             </div>
                         </div>
 
-                        {!!selectedProject && sortedList.length === 0 && (
+                        {!!selectedProject && displayList.length === 0 && (
                             <div className={styles.empty}>No attorneys in this shortlist.</div>
                         )}
 
-                        {sortedList.map((a) => (
+                        {displayList.map((a) => (
                             <div
                                 key={a._id}
                                 className={styles["edit-att-attorney-row"]}

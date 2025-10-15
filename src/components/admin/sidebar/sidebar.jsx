@@ -6,6 +6,7 @@ import profileuser from "../../../assets/icons/profile-user.png";
 import create from "../../../assets/icons/anvil.png";
 import shortlistEdit from "../../../assets/icons/edit.png";
 import attorneyEdit from "../../../assets/icons/user-edit.png";
+import postit from "../../../assets/icons/post-it.png";
 
 import styles from "./sidebar.module.css";
 
@@ -15,6 +16,7 @@ const adminNavLinks = [
     { label: "Upload Images", path: "/admin/upload-images", icon: profileuser, aria: "Upload Images" },
     { label: "Edit Shortlists", path: "/admin/edit-shortlists", icon: shortlistEdit, aria: "Edit Shortlists" },
     { label: "Edit Attorneys", path: "/admin/edit-attorneys", icon: attorneyEdit, aria: "Edit Attorneys" },
+    { label: "Outreach Notes", path: "/admin/outreach-notes", icon: postit, aria: "Outreach Notes" },
     // { label: "Invite Client", path: "/admin/invite-client", icon: null, aria: "Invite Client" },
 ];
 

@@ -142,4 +142,5 @@ env.json
 
 app/api/public
 
-src/components/archive
+src/components/archivesrc/components/admin/.DS_Store
+*/*/.DS_Store

@@ -137,7 +137,7 @@ const CreateShortlist = () => {
                         Include File Headers: &emsp;
                         <code>
                             FP ID, First Name, Last Name, Tier, Email or Personal Email, Phone or Personal Phone,
-                            Firm (current workplace), City, State, LinkedIn URL, Profile URL, Graduation Year, Full Bio
+                            Firm, City, State, LinkedIn URL, Profile URL, Graduation Year, Full Bio
                         </code>
 
                         {titleStatus.msg ? (

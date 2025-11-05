@@ -133,7 +133,12 @@ const CreateShortlist = () => {
                     </label>
 
                     <div className={styles.helper} aria-live="polite">
-                        Note: Project title is case sensitive. Used for limiting user access to the specified project.
+                        Note: Project title is case sensitive. Used for limiting user access to the specified project.<br/>
+                        Include File Headers: &emsp;
+                        <code>
+                            FP ID, First Name, Last Name, Tier, Email or Personal Email, Phone or Personal Phone,
+                            Firm (current workplace), City, State, LinkedIn URL, Profile URL, Graduation Year, Full Bio
+                        </code>
 
                         {titleStatus.msg ? (
                             <div
@@ -171,12 +176,7 @@ const CreateShortlist = () => {
                     </label>
 
                     <div className={styles.helper}>
-                        Note: Header title and subtitle will display on the PDF header.<br />
-                        Include File Headers:
-                        <code>
-                            FP ID, First Name, Last Name, Tier, Email or Personal Email, Phone or Personal Phone,
-                            Firm (current workplace), City, State, LinkedIn URL, Profile URL, Graduation Year, Full Bio
-                        </code>
+                        Note: Header title and subtitle will display on the PDF header.
                     </div>
 
                     <div className={styles.fieldset}>

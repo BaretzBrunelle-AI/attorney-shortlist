@@ -110,7 +110,7 @@ const UserLogin = () => {
 				<div className="user-login-header">
 					<div className="user-login-title">Welcome</div>
 					<div className="user-login-subtitle">
-						enter your access code to continue
+						Enter your access code to continue
 					</div>
 				</div>
 
@@ -119,7 +119,7 @@ const UserLogin = () => {
 						htmlFor="access-code-input"
 						className="user-login-label"
 					>
-						access code
+						Access Code
 					</label>
 
 					<div className="input-row">
@@ -127,7 +127,7 @@ const UserLogin = () => {
 							id="access-code-input"
 							type={showCode ? "text" : "password"}
 							className="user-login-input"
-							placeholder="paste or type your code"
+							placeholder="Paste or type your code"
 							value={code}
 							onChange={(e) => setCode(e.target.value)}
 							autoComplete="off"
@@ -140,20 +140,20 @@ const UserLogin = () => {
 								onClick={() => setShowCode((s) => !s)}
 								aria-label={
 									showCode
-										? "hide access code"
-										: "show access code"
+										? "Hide access code"
+										: "Show access code"
 								}
 								disabled={busy}
 							>
-								{showCode ? "hide" : "show"}
+								{showCode ? "Hide" : "Show"}
 							</button>
 							<button
 								type="button"
 								onClick={handlePaste}
-								aria-label="paste from clipboard"
+								aria-label="Paste from clipboard"
 								disabled={busy}
 							>
-								paste
+								Paste
 							</button>
 						</div>
 					</div>
@@ -163,7 +163,7 @@ const UserLogin = () => {
 						className="user-login-submit"
 						disabled={busy}
 					>
-						{busy ? "signing in…" : "sign in"}
+						{busy ? "Signing In…" : "Sign In"}
 					</button>
 				</form>
 
@@ -173,7 +173,7 @@ const UserLogin = () => {
 					className="request-token-hint"
 					onClick={handleRequestCode}
 				>
-					request access code
+					Request Access Code
 				</div>
 			</div>
 		</div>

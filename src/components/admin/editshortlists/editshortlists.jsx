@@ -280,7 +280,7 @@ const EditShortlists = () => {
                 <div className={styles.body}>
                     <div className={styles.controlsRow}>
                         <label className={styles.inline}>
-                            Shortlist:&nbsp;
+                            Project:&nbsp;
                             <select
                                 value={selectedProject || ""}
                                 onChange={(e) => setSelectedProject?.(e.target.value || null)}

@@ -1,61 +1,106 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { saveToken, verifyToken, deleteToken, saveValue } from "../../config/reusable_config.jsx";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+	deleteToken,
+	saveValue,
+	exchangeAccessCodeForSession,
+	verifyAccess,
+} from "../../config/reusable_config.jsx";
 
 const UserLogin = () => {
-	const [token, setToken] = useState("");
+	const [code, setCode] = useState("");
 	const [msg, setMsg] = useState("");
 	const [busy, setBusy] = useState(false);
-	const [showToken, setShowToken] = useState(false);
-	const navigate = useNavigate();
+	const [showCode, setShowCode] = useState(false);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const trimmed = token.trim();
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const runLogin = async (rawCode, fromQuery = false) => {
+		const trimmed = (rawCode || "").trim();
 		if (!trimmed) {
-			setMsg("Please enter an access token.");
+			if (!fromQuery) setMsg("please enter an access code.");
 			return;
 		}
+
 		setBusy(true);
-		setMsg("Verifying…");
+		setMsg(
+			fromQuery
+				? "starting your session…"
+				: "verifying access code…"
+		);
+
 		try {
-			await saveToken(trimmed, false);
-			const ok = await verifyToken(false);
+			// exchange access code + device_id for jwt (starts or replaces session)
+			const resp = await exchangeAccessCodeForSession(trimmed);
+
+			// verify jwt-based session
+			const ok = await verifyAccess();
+
 			if (ok) {
+				// persist raw access code separately (for auditing / future UX)
+				await saveValue("access_code", trimmed);
+
 				await saveValue("user_type", "user");
-				setMsg("Success! Redirecting…");
-				// With HashRouter, navigate WITHOUT '#'
+				await saveValue("session_status", "active");
+
+				setMsg("session active. redirecting…");
 				navigate("/client/dashboard", { replace: true });
 			} else {
 				await deleteToken();
-				setMsg("Invalid token. Please try again.");
+				setMsg("invalid or expired session. please try again.");
 			}
 		} catch (err) {
-			await deleteToken();
-			setMsg("Unable to verify token right now.");
 			console.error(err);
+			await deleteToken();
+			setMsg("invalid access code or unable to start a session.");
 		} finally {
 			setBusy(false);
 		}
 	};
 
+	// auto-login if an access code is present in the url
+	useEffect(() => {
+		const params = new URLSearchParams(location.search || "");
+		const queryCode =
+			params.get("access_token") ||
+			params.get("code") ||
+			params.get("token") ||
+			params.get("ACCESSCODE") ||
+			"";
+
+		if (queryCode) {
+			setCode(queryCode);
+			// fire-and-forget; if it fails, user can still log in manually
+			void runLogin(queryCode, true);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location.search]);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		await runLogin(code, false);
+	};
+
 	const handlePaste = async () => {
 		try {
 			const text = await navigator.clipboard.readText();
-			if (text) setToken(text.trim());
+			if (text) setCode(text.trim());
 		} catch {
-			// Clipboard may be blocked — no-op
+			// clipboard may be blocked — ignore
 		}
 	};
 
-	const handleRequestToken = () => {
-		// TODO: Implement request token workflow (modal or mailto link)
+	const handleRequestCode = () => {
+		// wire up "request access code" flow here
 	};
 
 	const statusClass =
-		msg.toLowerCase().includes("success")
+		msg.toLowerCase().includes("session active") ||
+			msg.toLowerCase().includes("success")
 			? "login-status success"
-			: msg.toLowerCase().includes("invalid") || msg.toLowerCase().includes("unable")
+			: msg.toLowerCase().includes("invalid") ||
+				msg.toLowerCase().includes("unable")
 				? "login-status error"
 				: "login-status";
 
@@ -63,46 +108,72 @@ const UserLogin = () => {
 		<div className="user-login-page">
 			<div className="user-login-card">
 				<div className="user-login-header">
-					<div className="user-login-title">Welcome back</div>
-					<div className="user-login-subtitle">Enter your access token to continue</div>
+					<div className="user-login-title">Welcome</div>
+					<div className="user-login-subtitle">
+						enter your access code to continue
+					</div>
 				</div>
 
 				<form onSubmit={handleSubmit} className="user-login-form">
-					<label htmlFor="access-token-input" className="user-login-label">
-						Access Token
+					<label
+						htmlFor="access-code-input"
+						className="user-login-label"
+					>
+						access code
 					</label>
 
 					<div className="input-row">
 						<input
-							id="access-token-input"
-							type={showToken ? "text" : "password"}
+							id="access-code-input"
+							type={showCode ? "text" : "password"}
 							className="user-login-input"
-							placeholder="Paste or type your token"
-							value={token}
-							onChange={(e) => setToken(e.target.value)}
+							placeholder="paste or type your code"
+							value={code}
+							onChange={(e) => setCode(e.target.value)}
 							autoComplete="off"
 							required
 							disabled={busy}
 						/>
 						<div className="input-action">
-							<button type="button" onClick={() => setShowToken((s) => !s)} aria-label={showToken ? "Hide token" : "Show token"}>
-								{showToken ? "Hide" : "Show"}
+							<button
+								type="button"
+								onClick={() => setShowCode((s) => !s)}
+								aria-label={
+									showCode
+										? "hide access code"
+										: "show access code"
+								}
+								disabled={busy}
+							>
+								{showCode ? "hide" : "show"}
 							</button>
-							<button type="button" onClick={handlePaste} aria-label="Paste from clipboard">
-								Paste
+							<button
+								type="button"
+								onClick={handlePaste}
+								aria-label="paste from clipboard"
+								disabled={busy}
+							>
+								paste
 							</button>
 						</div>
 					</div>
 
-					<button type="submit" className="user-login-submit" disabled={busy}>
-						{busy ? "Signing in..." : "Sign in"}
+					<button
+						type="submit"
+						className="user-login-submit"
+						disabled={busy}
+					>
+						{busy ? "signing in…" : "sign in"}
 					</button>
 				</form>
 
 				{msg && <div className={statusClass}>{msg}</div>}
 
-				<div className="request-token-hint" onClick={handleRequestToken}>
-					Request Access Token
+				<div
+					className="request-token-hint"
+					onClick={handleRequestCode}
+				>
+					request access code
 				</div>
 			</div>
 		</div>

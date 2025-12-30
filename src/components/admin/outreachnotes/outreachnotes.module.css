@@ -48,7 +48,7 @@
 }
 
 .inline {
-    color: var(--white-smoke);
+    color: var(--text);
 }
 
 .inline select {

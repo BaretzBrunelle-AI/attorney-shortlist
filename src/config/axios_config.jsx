@@ -1,23 +1,39 @@
 import axios from "axios";
-import { getToken } from "./reusable_config.jsx"
+import { getSessionToken, getToken } from "./reusable_config.jsx";
 
 const baseURL = import.meta.env.VITE_API_BASE || "";
 
 const api = axios.create({
-	baseURL: baseURL,
+    baseURL,
 });
 
 api.interceptors.request.use(async (config) => {
-	// Always send cookies
-	config.withCredentials = true;
-	// Only attach token if not explicitly disabled
-	if (config.requiresAuth === false) return config;
+    // always send cookies
+    config.withCredentials = true;
 
-	const token = await getToken(config.admin === true);
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
-	}
-	return config;
+    // allow opting out of auth
+    if (config.requiresAuth === false) {
+        return config;
+    }
+
+    // decide which token to attach
+    const isAdmin = config.admin === true;
+
+    let bearer = null;
+    if (isAdmin) {
+        // admin jwt stored under "admin_token"
+        bearer = await getToken(true);
+    } else {
+        // client session jwt stored under "user_session_token"
+        bearer = await getSessionToken();
+    }
+
+    if (bearer) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${bearer}`;
+    }
+
+    return config;
 });
 
 export default api;

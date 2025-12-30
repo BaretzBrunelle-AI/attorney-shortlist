@@ -95,7 +95,6 @@ const AdminLogin = () => {
         } catch (err) {
             const status = err?.response?.status;
             const detail = err?.response?.data?.detail;
-            // console.log("Invite error:", status, detail);
             setPageMsg(detail || "There was an error sending your Registration Code.");
         } finally {
             setBusy(false);

@@ -47,7 +47,8 @@
 	align-items: center;
 	gap: 10px;
 	padding: 10px 14px;
-	background-color: #223156; /* matches dark sidebar controls */
+	background-color: #223156;
+	/* matches dark sidebar controls */
 	border: 1px solid #334155;
 	border-radius: 10px;
 	color: #e2e8f0;
@@ -77,6 +78,135 @@
 }
 
 @keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.modalOverlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1500;
+}
+
+.modal {
+	background: var(--clr-surface, #ffffff);
+	border-radius: 12px;
+	box-shadow: 0 20px 40px rgba(15, 23, 42, 0.35);
+	padding: 16px 18px 14px;
+	width: 100%;
+	max-width: 460px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	color: black;
+}
+
+.modalHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.modalTitle {
+	font-weight: 700;
+	font-size: 16px;
+	text-transform: capitalize;
+}
+
+.closeButton {
+	border: none;
+	background: transparent;
+	color: inherit;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 4px;
+}
+
+.modalBody {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.modalSubtitle {
+	font-size: 13px;
+	color: var(--clr-muted, #64748b);
+}
+
+.pageNumberInputs {
+	display: grid;
+	gap: 12px;
+}
+
+.pageNumberInputs label {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	font-size: 13px;
+	color: black;
+}
+
+.pageNumInput {
+	padding: 6px 8px;
+	border-radius: 8px;
+	border: 1px solid var(--clr-surface-border, #e5e7eb);
+	font-size: 13px;
+}
+
+.modalFooter {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.secondaryButton {
+	border-radius: 8px;
+	border: 1px solid red;
+	background: #ffffff;
+	padding: 6px 12px;
+	font-size: 13px;
+	cursor: pointer;
+	color: red;
+}
+
+.downloadButton {
+	border-radius: 8px;
+	border: 1px solid var(--silver-lake-blue, #6ea8fe);
+	background: var(--silver-lake-blue, #6ea8fe);
+	color: #ffffff;
+	padding: 6px 14px;
+	font-size: 13px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.downloadButton:disabled,
+.secondaryButton:disabled {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+/* reuse your existing spinner if you like */
+.spinner {
+	width: 14px;
+	height: 14px;
+	border-radius: 999px;
+	border: 2px solid rgba(255, 255, 255, 0.4);
+	border-top-color: #ffffff;
+	animation: dl-spin 0.7s linear infinite;
+}
+
+@keyframes dl-spin {
 	to {
 		transform: rotate(360deg);
 	}

@@ -1,58 +1,148 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useOutletContext, useLocation } from "react-router-dom";
 
-// css
 import "./dashboard.css";
-
-// Widgets
 import AttorneyWidget from "../attorney_widget/attorney_widget";
-
-// reusable
-import { verifyToken, getValue } from "../../../config/reusable_config";
+import api from "../../../config/axios_config.jsx";
+import { getValue } from "../../../config/reusable_config.jsx";
 
 const Dashboard = () => {
-    const navigate = useNavigate();
-    const { selectedProject, attorneys } = useOutletContext() || {};
-    const [checked, setChecked] = useState(false);
+    const outletCtx = useOutletContext() || {};
+    const { selectedProject, attorneys: ctxAttorneys } = outletCtx;
+    const location = useLocation();
 
+    const [sessionProjectName, setSessionProjectName] = useState("");
+    const [clientAttorneys, setClientAttorneys] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState("");
+
+    const isAdminRoute = location.pathname.startsWith("/admin");
+
+    // load hydrated projects from the session for client routes only
     useEffect(() => {
+        if (isAdminRoute) return;
+        if (selectedProject) return;
+
         let alive = true;
+
         (async () => {
-            const type = await getValue("user_type");
+            try {
+                const raw = await getValue("user_projects");
+                if (!raw) return;
 
-            if (!type) {
-                navigate("/landing", { replace: true });
-                return;
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed) || parsed.length === 0) return;
+
+                const now = Date.now();
+                const nonExpired =
+                    parsed.find((p) => {
+                        if (!p.expires_at) return true;
+                        const t = new Date(p.expires_at).getTime();
+                        return Number.isFinite(t) && t > now;
+                    }) || parsed[0];
+
+                if (!alive) return;
+                setSessionProjectName(nonExpired?.project_name || "");
+            } catch (e) {
+                console.error("[Dashboard] failed to load user_projects", e);
             }
-
-            if (type === "admin") {
-                const okAdmin = await verifyToken(true);
-                if (!okAdmin) {
-                    const okUser = await verifyToken(false);
-                    if (!okUser) {
-                        navigate("/landing", { replace: true });
-                        return;
-                    }
-                }
-            } else {
-                const okUser = await verifyToken(false);
-                if (!okUser) {
-                    navigate("/landing", { replace: true });
-                    return;
-                }
-            }
-
-            if (alive) setChecked(true);
         })();
-        return () => { alive = false; };
-    }, [navigate]);
+
+        return () => {
+            alive = false;
+        };
+    }, [isAdminRoute, selectedProject]);
+
+    // fetch attorneys for the client session (uses jwt from axios interceptor)
+    useEffect(() => {
+        if (isAdminRoute) return;
+        if (!sessionProjectName) return;
+
+        let alive = true;
+
+        (async () => {
+            setLoading(true);
+            setErr("");
+            try {
+                const res = await api.get("/dashboard/get-attorneys-user", {
+                    admin: false,
+                });
+
+                const list = Array.isArray(res.data)
+                    ? res.data
+                    : res.data?.attorneys ?? [];
+
+                if (!alive) return;
+                setClientAttorneys(list);
+            } catch (e) {
+                if (!alive) return;
+                console.error(
+                    "[Dashboard] /dashboard/get-attorneys-user failed",
+                    e?.response?.data || e.message
+                );
+                setErr("Failed to load shortlist for this access code");
+                setClientAttorneys([]);
+            } finally {
+                if (alive) setLoading(false);
+            }
+        })();
+
+        return () => {
+            alive = false;
+        };
+    }, [isAdminRoute, sessionProjectName]);
+
+    // project + attorneys selection:
+    // - admin routes: use layout context
+    // - client route: use session project + fetched attorneys
+    const effectiveProjectName = isAdminRoute
+        ? selectedProject || ""
+        : sessionProjectName || "";
+
+    const effectiveAttorneys = isAdminRoute
+        ? ctxAttorneys || []
+        : clientAttorneys || [];
+
+    if (!effectiveProjectName) {
+        return (
+            <div className="shortlist-dashboard-main-container">
+                <div className="shortlist-dashboard-empty">
+                    {loading
+                        ? "loading shortlist…"
+                        : "no active shortlist selected for this session"}
+                </div>
+            </div>
+        );
+    }
+
+    if (!isAdminRoute && loading && effectiveAttorneys.length === 0) {
+        return (
+            <div className="shortlist-dashboard-main-container">
+                <div className="shortlist-dashboard-empty">
+                    loading shortlist…
+                </div>
+            </div>
+        );
+    }
+
+    if (!isAdminRoute && err && effectiveAttorneys.length === 0) {
+        return (
+            <div className="shortlist-dashboard-main-container">
+                <div className="shortlist-dashboard-empty">
+                    {err}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="shortlist-dashboard-main-container">
-            <AttorneyWidget attorneys={attorneys} project={selectedProject}/>
+            <AttorneyWidget
+                attorneys={effectiveAttorneys}
+                project={effectiveProjectName}
+            />
         </div>
     );
 };
-
 
 export default Dashboard;

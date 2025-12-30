@@ -22,7 +22,7 @@ const AdminLayout = () => {
 	useEffect(() => {
 		const checkAdmin = async () => {
 			const token = getValue("jwtToken");
-			const verified = await verifyToken(token, true);
+			const verified = await verifyToken(true);
 			setIsAdminVerified(verified);
 			setCheckedAdmin(true);
 		};

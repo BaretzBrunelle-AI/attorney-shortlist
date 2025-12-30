@@ -1,46 +1,49 @@
+// src/components/client/layout/layout.jsx
 import React, { useEffect, useState } from "react";
-import { Outlet, useLocation, Navigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 
 import NavBar from "../navbar/navbar.jsx";
-import { getValue, verifyToken } from "../../../config/reusable_config.jsx";
+import { verifyAccess } from "../../../config/reusable_config.jsx";
 
 import "./layout.css";
 
 const ClientLayout = () => {
-	const [isAdminVerified, setIsAdminVerified] = useState(false);
-	const [checkedAdmin, setCheckedAdmin] = useState(false);
-	const location = useLocation();
+    const [isUserVerified, setIsUserVerified] = useState(false);
+    const [checkedUser, setCheckedUser] = useState(false);
 
-	useEffect(() => {
-		const checkAdmin = async () => {
-			const token = getValue("admin_token");
-			const verified = await verifyToken(token);
-			setIsAdminVerified(verified);
-			setCheckedAdmin(true);
-		};
-		checkAdmin();
-	}, []);
+    useEffect(() => {
+        let alive = true;
 
-	if (!checkedAdmin) return null;
+        const checkUser = async () => {
+            const verified = await verifyAccess();
+            if (!alive) return;
+            setIsUserVerified(verified);
+            setCheckedUser(true);
+        };
 
-	// With HashRouter, useLocation().pathname is "/admin/..."
-	const isAdminRoute = location.pathname.startsWith("/admin");
-	const isAdminLogin = location.pathname === "/admin/login";
+        checkUser();
 
-	if (isAdminRoute && !isAdminLogin && !isAdminVerified) {
-		return <Navigate to="/admin/login" replace />;
-	}
+        return () => {
+            alive = false;
+        };
+    }, []);
 
-	return (
-		<div className="client-dashboard-layout">
-			<div className="client-dashboard-body">
-				<NavBar />
-				<div className="client-layout-content">
-					<Outlet />
-				</div>
-			</div>
-		</div>
-	);
+    if (!checkedUser) return null;
+
+    if (!isUserVerified) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return (
+        <div className="client-dashboard-layout">
+            <div className="client-dashboard-body">
+                <NavBar />
+                <div className="client-layout-content">
+                    <Outlet />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default ClientLayout;

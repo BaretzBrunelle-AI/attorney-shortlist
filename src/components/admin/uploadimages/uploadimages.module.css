@@ -1,16 +1,20 @@
+.page {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
 .container {
     width: 100%;
     max-width: 1100px;
-    margin: 24px auto;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: var(--card-radius);
     box-shadow: var(--shadow);
-    color: var(--text);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    padding: 0;
 }
 
 .sectionTitle {
@@ -21,18 +25,30 @@
     color: var(--text);
 }
 
+.inline {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: black;
+}
+
+.inline select {
+    min-width: 240px;
+    padding: 8px 10px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: var(--text);
+}
+
 .form {
     display: flex;
     flex-direction: column;
     max-height: 70vh;
     padding: 16px 20px;
-}
-
-.form label {
-    display: grid;
-    gap: 6px;
-    font-weight: 600;
-    color: var(--text);
 }
 
 .select {

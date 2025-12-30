@@ -14,7 +14,7 @@
 	position: sticky;
 	top: 0;
 	width: 250px;
-	height: 100%;
+	height: auto;
 	background: var(--sb-bg);
 	color: var(--sb-fg);
 	padding: 16px;
@@ -24,6 +24,14 @@
 	overflow-y: hidden;
 	margin-block: 0;
 	z-index: 1000;
+	display: flex;
+	justify-content: space-between;
+}
+
+.top {
+	display: flex;
+	flex-direction: column;
+	gap: .25rem;
 }
 
 .section {
@@ -96,11 +104,13 @@
 	font-weight: 700;
 	text-decoration: none;
 	transition: background-color .15s ease, filter .15s ease, opacity .15s ease;
+	width: 100%;
 }
 
 .link:hover {
 	background-color: var(--sb-control-bg-hover);
 	filter: brightness(1.02);
+	border: 1px solid white;
 }
 
 .link:disabled,
@@ -117,7 +127,39 @@
 	height: 18px;
 }
 
-/* Logout button tweak (optional) */
-.logout {
-	margin-bottom: 10%;
+/* active nav button */
+.linkActive {
+	position: relative;
+	background-color: #111827;
+	/* a bit darker than control bg */
+	border-color: #e5e7eb;
+	color: var(--sb-fg-strong);
+}
+
+/* left accent bar on active item */
+.linkActive::before {
+	content: "";
+	position: absolute;
+	left: -6px;
+	top: 6px;
+	bottom: 6px;
+	width: 3px;
+	border-radius: 999px;
+	background: linear-gradient(to bottom,
+			#93c5fd,
+			#38bdf8,
+			#22c55e);
+}
+
+/* keep disabled-active readable */
+.linkActive:disabled,
+.linkActive[aria-disabled="true"] {
+	opacity: 1;
+	cursor: default;
+}
+
+.bottom {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
 }
